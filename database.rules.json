@@ -1,0 +1,44 @@
+{
+  "rules": {
+    "urls": {
+      ".read": true,
+      ".write": "auth != null",
+      "$id": {
+        ".read": true,
+        ".write": "auth != null",
+        "l": {
+          ".read": true,
+          ".write": "auth != null"
+        },
+        "s": {
+          ".read": true,
+          ".write": "auth != null"
+        },
+        "h": {
+          ".read": true,
+          ".write": true
+        },
+        "m": {
+          ".read": true,
+          ".write": true
+        },
+        "d": {
+          ".read": true,
+          ".write": true
+        },
+        "r": {
+          ".read": true,
+          ".write": true
+        },
+        "p": {
+          ".read": true,
+          ".write": true
+        },
+        "c": {
+          ".read": false,
+          ".write": true
+        }
+      }
+    }
+  }
+}

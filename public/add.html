@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+
+<html ng-app="urlEditor">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>Add URLs</title>
+
+	<link href="https://fonts.googleapis.com/css?family=Work+Sans:100,200,300,400,500,600,700,800,900" rel="stylesheet">
+	<link rel="stylesheet" href="css/add.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intro.js/2.7.0/introjs.css">
+</head>
+
+<body ng-controller="urlCtrl">
+	<div id="loader">
+		<img src="img/logo.svg" alt=""> <br>
+		<p><span id="dot"></span>
+			<span id="dot"></span>
+			<span id="dot"></span></p>
+	</div>
+	<div class="login-outer">
+		<div id="login">
+			<form id="loginForm" onsubmit="signIn();">
+				<div id="logo"><img src="img/logo.svg" alt="">
+					<span id="header">Login</span></div>
+				<p id="name">Email</p>
+				<input autofocus type="text" id="email" required placeholder="someone@somewhere.tld"><br>
+				<p id="name">Password</p>
+				<div id="password-div">
+					<input onfocus="pswrdDivChange('focus');" onblur="pswrdDivChange('blur');" type="password" id="password" required placeholder="No one shall know...">
+					<span id="forgot" onclick="forgotPassword('start');">Forgot Password</span><br>
+				</div>
+				<button type="submit">Log In</button>
+				<p id="error">Errors will be<br> displayed here.</p>
+			</form>
+
+			<form id="forgotSubmit" onsubmit="forgotPassword('reset');">
+				<div id="logo"><img src="img/logo.svg" alt="">
+					<span id="header">Forgot Password</span></div>
+				<p id="name">Email</p>
+				<input autofocus placeholder="someone@somewhere.tld" type="text" id="emailForgot" required>
+				<p id="name">Email Again</p>
+				<input autofocus placeholder="someone@somewhere.tld" type="text" id="emailForgot2" required>
+				<button type="submit">Get a New Password</button>
+				<button onclick="forgotPassword('resetForm');">Back to Login</button>
+				<p id="sent">An email was sent to - email - containing a password reset link.</p>
+			</form>
+		</div>
+	</div>
+
+	<div id="loggedin">
+		<div id="new">
+			<h1>Add New URL</h1>
+			<form onsubmit="add();">
+				<input type="text" id="short-url" required placeholder="Short URL">
+				<span onclick="rollDice();">Random</span>
+				<input type="text" id="long-url" required placeholder="Long URL">
+				<button type="submit">Shorten</button>
+			</form>
+		</div>
+		<div class="grid">
+			<div id="current">
+				<h1>Current URLs</h1>
+				<div class="url" ng-repeat="url in urls">
+					<div class="grid">
+						<input class="shortURL" type="text" spellcheck="false" ng-model="url.$id" readonly/>
+						<div>
+							<input class="hits" type="text" spellcheck="false" ng-model="url.h" readonly /><br>
+							<div class="clicks">Clicks</div>
+						</div>
+					</div>
+					<input class="longURL" type="text" spellcheck="false" ng-model="url.l" readonly/>
+					<div class="grid platform">
+						<span>Desktop Clicks:&nbsp;</span>
+						<input class="desktop" type="text" spellcheck="false" ng-model="url.d" readonly />
+						<span>Mobile Clicks:&nbsp;</span>
+						<input class="mobile" type="text" spellcheck="false" ng-model="url.m" readonly />
+					</div>
+					<br>
+					<div class="grid">
+						<svg class="edit" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="16 3 21 8 8 21 3 21 3 16 16 3"></polygon></svg>
+						<svg class="stats" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>
+						<svg class="delete" ng-click="urls.$remove(url)" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
+					</div>
+				</div>
+			</div>
+
+			<div id="visualization">
+				<h1>Data</h1>
+				<p>All Hits Data:</p>
+				<input class="mobile" type="text" spellcheck="false" readonly />
+			</div>
+		</div>
+		<div id="edit">
+			<h1>Edit URL</h1>
+			<div id="edit-modal">
+				<form onsubmit="saveEdit();">
+					<input id="shortURLold" required readonly type="text" spellcheck="false">
+					<input id="shortURLnew" required placeholder="New Short URL" type="text" spellcheck="false">
+					<input id="longURLedit" required type="text" spellcheck="false">
+					<button type="submit">Save</button>
+				</form>
+			</div>
+		</div>
+
+
+		<button onclick="signOut();">Sign Out</button>
+		<button onclick="resetPassword();">Reset Password</button>
+
+		<p id="info"></p>
+	</div>
+
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.1/angular.min.js"></script>
+
+	<script src="https://www.gstatic.com/firebasejs/3.6.6/firebase.js"></script>
+
+	<script src="https://cdn.firebase.com/libs/angularfire/2.3.0/angularfire.min.js"></script>
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/intro.js/2.7.0/intro.min.js"></script>
+
+	<script src="js/add.js"></script>
+
+</body>
+
+</html>
