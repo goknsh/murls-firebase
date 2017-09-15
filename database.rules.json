@@ -35,7 +35,19 @@
           ".write": true
         },
         "c": {
-          ".read": false,
+          ".read": true,
+          ".write": true
+        },
+        "td": {
+          ".read": true,
+          ".write": true
+        },
+        "tm": {
+          ".read": true,
+          ".write": true
+        },
+        "th": {
+          ".read": true,
           ".write": true
         }
       }

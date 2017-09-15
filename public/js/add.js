@@ -111,17 +111,31 @@ function add() {
 	} else {
 		var longURL = document.getElementById("long-url").value;
 		var shortURL = document.getElementById("short-url").value;
+		var dbCheck = firebase.database().ref("urls/" + shortURL);
+		dbCheck.once("value")
+		.then(function (snapshot) {
+			window.present = snapshot.exists();
+			if (present === true) {
+				alert("The new Short URL already exists. Please fix that and submit again, or edit the Short URL.")
+			} else {
+		var dt = new Date();
+		var m = String(dt.getUTCMonth() + 1);
+		var d = String(dt.getUTCDate());
+		var y = String(dt.getFullYear());
+		var date = String(d + "-" + m + "-" + y);
 		var db = firebase.database().ref().child("urls");
 		db.child(shortURL).set({
 			l: longURL,
-			h: 0,
-			d: 0,
-			m: 0,
+			td: 0,
+			tm: 0,
+			th: 0,
 			s: 2
 		});
 		document.getElementById("long-url").value = '';
 		document.getElementById("short-url").value = '';
 	}
+	});
+}
 }
 
 var app = angular.module("urlEditor", ["firebase"]);
