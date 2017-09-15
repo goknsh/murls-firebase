@@ -402,7 +402,8 @@ function hits() {
 	h.transaction(function (h) {
 		return (h || 0) + 1;
 	});
-	var le = firebase.database().ref('urls' + currentURL + '/le');
+	var le = firebase.database().ref().child('urls' + currentURL + '/le');
+	le.remove();
 	le.set({
 		le: x
 	})
@@ -482,7 +483,7 @@ function ip() {
 function rdr(s) {
 	if (s === 'go') {
 		setTimeout(function() {
-			document.location = longURL
+			// document.location = longURL
 		}, 2000);
 	}
 	else {

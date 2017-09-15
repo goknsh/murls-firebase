@@ -24,7 +24,7 @@ function signIn() {
 			document.getElementById("error").style.opacity = "0";
 		}, 5000);
 	});
-	setTimeout(function() {
+	setTimeout(function () {
 		document.getElementById("email").value = "";
 		document.getElementById("password").value = "";
 	}, 1000);
@@ -113,29 +113,29 @@ function add() {
 		var shortURL = document.getElementById("short-url").value;
 		var dbCheck = firebase.database().ref("urls/" + shortURL);
 		dbCheck.once("value")
-		.then(function (snapshot) {
-			window.present = snapshot.exists();
-			if (present === true) {
-				alert("The new Short URL already exists. Please fix that and submit again, or edit the Short URL.")
-			} else {
-		var dt = new Date();
-		var m = String(dt.getUTCMonth() + 1);
-		var d = String(dt.getUTCDate());
-		var y = String(dt.getFullYear());
-		var date = String(d + "-" + m + "-" + y);
-		var db = firebase.database().ref().child("urls");
-		db.child(shortURL).set({
-			l: longURL,
-			td: 0,
-			tm: 0,
-			th: 0,
-			s: 2
-		});
-		document.getElementById("long-url").value = '';
-		document.getElementById("short-url").value = '';
+			.then(function (snapshot) {
+				window.present = snapshot.exists();
+				if (present === true) {
+					alert("The new Short URL already exists. Please fix that and submit again, or edit the Short URL.")
+				} else {
+					var dt = new Date();
+					var m = String(dt.getUTCMonth() + 1);
+					var d = String(dt.getUTCDate());
+					var y = String(dt.getFullYear());
+					var date = String(d + "-" + m + "-" + y);
+					var db = firebase.database().ref().child("urls");
+					db.child(shortURL).set({
+						l: longURL,
+						td: 0,
+						tm: 0,
+						th: 0,
+						s: 2
+					});
+					document.getElementById("long-url").value = '';
+					document.getElementById("short-url").value = '';
+				}
+			});
 	}
-	});
-}
 }
 
 var app = angular.module("urlEditor", ["firebase"]);
@@ -147,8 +147,8 @@ app.controller("urlCtrl", function ($scope, $firebaseArray) {
 document.addEventListener("click", function (e) {
 	console.log(e.target.classList)
 	if (e.target.classList.contains("edit")) {
+		console.log("edit")
 		var number = Array.from(document.getElementsByClassName("edit")).indexOf(e.target);
-		console.log(number)
 		var shortURLedit = document.getElementsByClassName("shortURL")[number].value;
 		var longURLedit = document.getElementsByClassName("longURL")[number].value;
 		window.hits = document.getElementsByClassName("hits")[number].value;
@@ -158,12 +158,13 @@ document.addEventListener("click", function (e) {
 		document.getElementById("longURLedit").value = longURLedit;
 		document.getElementById("shortURLnew").value = "";
 	}
-});
-document.addEventListener("click", function (e) {
-	console.log(e.target.classList)
 	if (e.target.classList.contains("stats")) {
 		var number = Array.from(document.getElementsByClassName("stats")).indexOf(e.target);
-		console.log(number)
+		var shortURLdata = document.getElementsByClassName("shortURLdata")
+		var shortURL = document.getElementsByClassName("shortURL")[number].value;
+		for (var i = 0; i < shortURLdata.length; i++) {
+			shortURLdata[i].innerText = shortURL;
+		}
 	}
 });
 
@@ -196,26 +197,26 @@ function saveEdit() {
 		}
 		var dbCheck = firebase.database().ref("urls/" + shortNew);
 		dbCheck.once("value")
-		.then(function (snapshot) {
-			window.presentEdit = snapshot.exists();
-			if (presentEdit === true) {
-				alert("The new Short URL already exists. Please fix that and submit again.")
-			}
-			else {
-				var db = firebase.database().ref().child("urls");
-				hits = Number(hits);
-				desktop = Number(desktop);
-				mobile = Number(mobile);
-				db.child(shortOld).remove()
-				db.child(shortNew).set({
-					l: longEdited,
-					h: hits,
-					d: desktop,
-					m: mobile,
-					s: 2
-				});
-			}
-		})
+			.then(function (snapshot) {
+				window.presentEdit = snapshot.exists();
+				if (presentEdit === true) {
+					alert("The new Short URL already exists. Please fix that and submit again.")
+				}
+				else {
+					var db = firebase.database().ref().child("urls");
+					hits = Number(hits);
+					desktop = Number(desktop);
+					mobile = Number(mobile);
+					db.child(shortOld).remove()
+					db.child(shortNew).set({
+						l: longEdited,
+						h: hits,
+						d: desktop,
+						m: mobile,
+						s: 2
+					});
+				}
+			})
 	}
 }
 
@@ -247,7 +248,7 @@ function forgotPassword(d) {
 		if (emailAddress !== emailAddress2) {
 			document.getElementById("sent").innerText = "Both emails do not match. Please resubmit the form after correcting the mistake."
 			document.getElementById("sent").style.opacity = "1"
-			setTimeout(function() {
+			setTimeout(function () {
 				document.getElementById("sent").style.opacity = "0"
 			}, 5000);
 		}
@@ -256,13 +257,13 @@ function forgotPassword(d) {
 				var errorMessage = error.message;
 				document.getElementById("sent").innerText = errorMessage;
 				document.getElementById("sent").style.opacity = "1"
-				setTimeout(function() {
+				setTimeout(function () {
 					document.getElementById("sent").style.opacity = "0"
 				}, 5000);
 			});
 			document.getElementById("sent").innerText = "An email was sent to " + emailAddress + " containing a password reset link."
 			document.getElementById("sent").style.opacity = "1"
-			setTimeout(function() {
+			setTimeout(function () {
 				document.getElementById("sent").style.opacity = "0"
 			}, 5000);
 		}
@@ -270,16 +271,39 @@ function forgotPassword(d) {
 	}
 }
 
-function showStats(e) {
-		if (e.target.classList.contains("edit")) {
-			var number = Array.from(document.getElementsByClassName("edit")).indexOf(e.target);
-			var shortURLedit = document.getElementsByClassName("shortURL")[number].value;
-			var longURLedit = document.getElementsByClassName("longURL")[number].value;
-			window.hits = document.getElementsByClassName("hits")[number].value;
-			window.desktop = document.getElementsByClassName("desktop")[number].value;
-			window.mobile = document.getElementsByClassName("mobile")[number].value;
-			document.getElementById("shortURLold").value = shortURLedit;
-			document.getElementById("longURLedit").value = longURLedit;
-			document.getElementById("shortURLnew").value = "";
+
+var ctx = document.getElementById('allHits').getContext('2d');
+var chart = new Chart(ctx, {
+	type: 'line',
+
+	data: {
+		labels: ["14th September 2017", "15th September 2017", "16th September 2017", "17th September 2017", "18th September 2017", "19th September 2017", "20th September 2017"],
+		datasets: [{
+			label: "All Hits",
+			backgroundColor: 'rgba(255, 99, 132, 0.1)',
+			borderColor: 'rgb(255, 99, 132)',
+			data: [20,60,80,120,90,5,9],
+		},
+		{
+			label: "Mobile Hits",
+			backgroundColor: 'rgba(255, 227, 44, 0.1)',
+			borderColor: 'rgb(255, 227, 44',
+			data: [15,21,17,89,77,2,5],
+		},
+		{
+			label: "Desktop Hits",
+			backgroundColor: 'rgba(42, 245, 152, 0.1)',
+			borderColor: 'rgb(42, 245, 152',
+			data: [5,39,17,63,13,3,4],
+		}],
+	},
+
+	// Configuration options go here
+	options: {
+		scales: {
+				xAxes: [{
+						stacked: true
+				}]
 		}
 }
+});
