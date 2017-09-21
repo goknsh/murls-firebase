@@ -49,6 +49,14 @@
         "th": {
           ".read": true,
           ".write": true
+        },
+        "le": {
+          ".read": true,
+          ".write": true
+        },
+        "fe": {
+          ".read": true,
+          ".write": "auth != null"
         }
       }
     }
