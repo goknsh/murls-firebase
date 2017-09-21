@@ -437,13 +437,25 @@ function referrer() {
 			return (u || 0) + 1;
 		});
 	} else {
-		ref = ref.replace(/\./g, "-")
+		if (ref.includes("/")) {
+			ref = ref.split("/")
+			ref = ref[0]
+			ref = ref.replace(/\./g, "&")
+			ref = ref.replace(/https:\/\//g, "")
+			ref = ref.replace(/http:\/\//g, "")
+			var e = firebase.database().ref('urls' + currentURL + '/r/' + ref)
+			e.transaction(function (e) {
+				return (e || 0) + 1;
+			});
+		} else {
+		ref = ref.replace(/\./g, "&")
 		ref = ref.replace(/https:\/\//g, "")
 		ref = ref.replace(/http:\/\//g, "")
 		var e = firebase.database().ref('urls' + currentURL + '/r/' + ref)
 		e.transaction(function (e) {
 			return (e || 0) + 1;
 		});
+	}
 	}
 }
 
@@ -483,8 +495,8 @@ function ip() {
 function rdr(s) {
 	if (s === 'go') {
 		setTimeout(function() {
-			// document.location = longURL
-		}, 2000);
+			document.location = longURL
+		}, 300);
 	}
 	else {
 		document.getElementById("info").innerText = error;

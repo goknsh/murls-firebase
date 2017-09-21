@@ -91,6 +91,9 @@ button {
 .grid {
   display: flex;
 }
+.grid .col {
+  flex: 1;
+}
 #loggedin {
   display: none;
 }
@@ -114,7 +117,10 @@ button {
 }
 #loggedin #current {
   flex: 2;
-  margin: 2rem 0.5rem 0 0.5rem;
+  margin: 0 0.5rem 0 0.5rem;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  height: 100vh;
 }
 #loggedin #current .url {
   display: flex;
@@ -180,7 +186,10 @@ button {
 }
 #loggedin #visualization {
   flex: 6;
-  margin: 2rem 0 0 2rem;
+  margin: 0 0 0 2rem;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  height: 100vh;
 }
 #loader {
   display: flex;

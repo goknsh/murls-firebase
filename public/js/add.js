@@ -129,7 +129,8 @@ function add() {
 						td: 0,
 						tm: 0,
 						th: 0,
-						s: 2
+						s: 2,
+						fe: date
 					});
 					document.getElementById("long-url").value = '';
 					document.getElementById("short-url").value = '';
@@ -159,14 +160,196 @@ document.addEventListener("click", function (e) {
 		document.getElementById("shortURLnew").value = "";
 	}
 	if (e.target.classList.contains("stats")) {
+		// loader('yes')
 		var number = Array.from(document.getElementsByClassName("stats")).indexOf(e.target);
 		var shortURLdata = document.getElementsByClassName("shortURLdata")
 		var shortURL = document.getElementsByClassName("shortURL")[number].value;
 		for (var i = 0; i < shortURLdata.length; i++) {
 			shortURLdata[i].innerText = shortURL;
 		}
+		var xmlhttp = new XMLHttpRequest();
+		xmlhttp.onreadystatechange = function () {
+			if (this.readyState == 4 && this.status == 200) {
+				var responses = JSON.parse(this.responseText);
+				var startDate = responses.fe;
+				startDate = startDate.replace(/-/g, "/")
+				startDate = startDate.split("/")
+				startDate = startDate[1] + "/" + startDate[0] + "/" + startDate[2]
+				var endDate = responses.le.le;
+				endDate = endDate.replace(/-/g, "/")
+				endDate = endDate.split("/")
+				endDate = endDate[1] + "/" + endDate[0] + "/" + endDate[2]
+				var start = new Date('"' + startDate + '"');
+				var end = new Date('"' + endDate + '"');
+				var newend = end.setDate(end.getDate() + 1);
+				var end = new Date(newend);
+				var platforms = responses.p;
+				platforms = JSON.stringify(platforms)
+				platforms = platforms.split(',')
+				var numberOfPlatforms = platforms.length;
+				var replaceNum;
+				window.platformLabels = []
+				window.platformNumbers = []
+				console.log(referrer)
+				for (replaceNum = 0; replaceNum < numberOfPlatforms; replaceNum++) {
+					platforms[replaceNum] = platforms[replaceNum].replace(/{"/g, "")
+					platforms[replaceNum] = platforms[replaceNum].replace(/"/g, '')
+					platforms[replaceNum] = platforms[replaceNum].replace(/}/g, '')
+					platforms[replaceNum] = platforms[replaceNum].split(":")
+					platformLabels.push(platforms[replaceNum][0])
+					platformNumbers.push(platforms[replaceNum][1])
+				}
+				var referrer = JSON.stringify(responses.r);
+				referrer = referrer.split(',')
+				var numberOfReferrers = referrer.length;
+				window.referrerLabels = []
+				window.referrerNumbers = []
+				for (replaceNum = 0; replaceNum < numberOfReferrers; replaceNum++) {
+					referrer[replaceNum] = referrer[replaceNum].replace(/{"/g, "")
+					referrer[replaceNum] = referrer[replaceNum].replace(/"/g, '')
+					referrer[replaceNum] = referrer[replaceNum].replace(/}/g, '')
+					referrer[replaceNum] = referrer[replaceNum].replace(/&/g, '.')
+					referrer[replaceNum] = referrer[replaceNum].replace(/u/g, 'Unknown')
+					referrer[replaceNum] = referrer[replaceNum].split(":")
+					referrerLabels.push(referrer[replaceNum][0])
+					referrerNumbers.push(referrer[replaceNum][1])
+				}
+				var countries = JSON.stringify(responses.c);
+				countries = countries.split(',')
+				var numberOfCountries = countries.length;
+				window.countryLabels = []
+				window.countryNumbers = []
+				for (replaceNum = 0; replaceNum < numberOfCountries; replaceNum++) {
+					countries[replaceNum] = countries[replaceNum].replace(/{"/g, "")
+					countries[replaceNum] = countries[replaceNum].replace(/"/g, '')
+					countries[replaceNum] = countries[replaceNum].replace(/}/g, '')
+					countries[replaceNum] = countries[replaceNum].replace(/&/g, '.')
+					countries[replaceNum] = countries[replaceNum].replace(/u/g, 'Unknown')
+					countries[replaceNum] = countries[replaceNum].split(":")
+					countryLabels.push(countries[replaceNum][0])
+					countryNumbers.push(countries[replaceNum][1])
+				}
+				console.log("Labels "+countryLabels)
+				console.log("Numbers "+countryNumbers)
+				window.labels = []
+				window.desktop = []
+				window.mobile = []
+				window.hits = []
+				while (start < end) {
+					var responses = JSON.parse(this.responseText);
+					var dateIs = start.getUTCDate() + "-" + (start.getUTCMonth() + 1) + "-" + start.getUTCFullYear()
+					labels.push(dateIs);
+					var dateIs = start.getUTCDate() + "-" + (start.getUTCMonth() + 1) + "-" + start.getUTCFullYear()
+					var oneHit = responses.h[dateIs];
+					var oneDesktopHit = responses.d[dateIs]
+					var oneMobileHit = responses.m[dateIs]
+					if (oneHit === undefined) {
+						hits.push(0)
+					} else {
+						hits.push(oneHit)
+					}
+					if (oneDesktopHit === undefined) {
+						desktop.push(0)
+					} else {
+						desktop.push(oneDesktopHit)
+					}
+					if (oneMobileHit === undefined) {
+						mobile.push(0)
+					} else {
+						mobile.push(oneMobileHit)
+					}
+					var newDate = start.setDate(start.getDate() + 1);
+					start = new Date(newDate);
+				}
+				console.log(hits)
+				chart();
+			}
+		};
+		xmlhttp.open("GET", "https://" + config.projectId + ".firebaseio.com/urls/" + shortURL + ".json", true);
+		xmlhttp.send();
 	}
 });
+
+function chart() {
+	var hitsChart = document.getElementById('allHits').getContext('2d');
+	new Chart(hitsChart, {
+		type: 'line',
+
+		data: {
+			labels: labels,
+			datasets: [{
+					label: "All Hits",
+					backgroundColor: 'rgba(255, 99, 132, 0.1)',
+					borderColor: 'rgb(255, 99, 132)',
+					data: hits
+				},
+				{
+					label: "Mobile Hits",
+					backgroundColor: 'rgba(255, 227, 44, 0.1)',
+					borderColor: 'rgb(255, 227, 44)',
+					data: mobile
+				},
+				{
+					label: "Desktop Hits",
+					backgroundColor: 'rgba(42, 245, 152, 0.1)',
+					borderColor: 'rgb(42, 245, 152)',
+					data: desktop,
+				}
+			],
+		},
+
+		// Configuration options go here
+		options: {
+			elements: {
+				line: {
+					tension: 0, // disables bezier curves
+				}
+			}
+		}
+	});
+	var platformBar = document.getElementById('platform').getContext('2d');
+	new Chart(platformBar, {
+		type: 'bar',
+		data: {
+			labels: platformLabels,
+			datasets: [{
+				label: "Hits on Platform",
+				backgroundColor: ["#ff6384", "#ffe32c", "#2af598", "#6284FF", "#FF0000", "#FFE32C", "#ff6384", "#ffe32c", "#2af598", "#6284FF", "#FF0000", "#FFE32C", "#ff6384", "#ffe32c", "#2af598", "#6284FF", "#FF0000", "#FFE32C", "#ff6384", "#ffe32c", "#2af598", "#6284FF", "#FF0000", "#FFE32C", "#ff6384", "#ffe32c", "#2af598", "#6284FF", "#FF0000", "#FFE32C", "#ff6384", "#ffe32c", "#2af598", "#6284FF", "#FF0000", "#FFE32C", "#ff6384", "#ffe32c", "#2af598", "#6284FF", "#FF0000", "#FFE32C", "#ff6384", "#ffe32c", "#2af598", "#6284FF", "#FF0000", "#FFE32C", "#ff6384", "#ffe32c", "#2af598", "#6284FF", "#FF0000", "#FFE32C", "#ff6384", "#ffe32c", "#2af598", "#6284FF", "#FF0000", "#FFE32C", "#ff6384", "#ffe32c", "#2af598", "#6284FF", "#FF0000", "#FFE32C", "#ff6384", "#ffe32c", "#2af598", "#6284FF", "#FF0000", "#FFE32C", "#ff6384", "#ffe32c", "#2af598", "#6284FF", "#FF0000", "#FFE32C", "#ff6384", "#ffe32c", "#2af598", "#6284FF", "#FF0000", "#FFE32C", "#ff6384", "#ffe32c", "#2af598", "#6284FF", "#FF0000", "#FFE32C", "#ff6384", "#ffe32c", "#2af598", "#6284FF", "#FF0000", "#FFE32C", "#ff6384", "#ffe32c", "#2af598", "#6284FF", "#FF0000", "#FFE32C", "#ff6384", "#ffe32c", "#2af598", "#6284FF", "#FF0000", "#FFE32C", "#ff6384", "#ffe32c", "#2af598", "#6284FF", "#FF0000", "#FFE32C", "#ff6384", "#ffe32c", "#2af598", "#6284FF", "#FF0000", "#FFE32C", "#ff6384", "#ffe32c", "#2af598", "#6284FF", "#FF0000", "#FFE32C", "#ff6384", "#ffe32c", "#2af598", "#6284FF", "#FF0000", "#FFE32C", "#ff6384", "#ffe32c", "#2af598", "#6284FF", "#FF0000", "#FFE32C", "#ff6384", "#ffe32c", "#2af598", "#6284FF", "#FF0000", "#FFE32C", "#ff6384", "#ffe32c", "#2af598", "#6284FF", "#FF0000", "#FFE32C", "#ff6384", "#ffe32c", "#2af598", "#6284FF", "#FF0000", "#FFE32C", "#ff6384", "#ffe32c", "#2af598", "#6284FF", "#FF0000", "#FFE32C"],
+				data: platformNumbers
+			}]
+		},
+		options: {
+			legend: {
+				display: false
+			}
+		}
+	});
+
+	var referrerPie = document.getElementById('referrer').getContext('2d');
+	new Chart(referrerPie, {
+		type: 'pie',
+		data: {
+			labels: referrerLabels,
+			datasets: [{
+				backgroundColor: ["#ff6384", "#ffe32c", "#2af598", "#6284FF", "#FF0000", "#FAACA8", "#21D4FD", "#B721FF", "#08AEEA", "#2AF598", "#2B86C5", "#F7CE68", "#16A085", "#ff6384", "#ffe32c", "#2af598", "#6284FF", "#FF0000", "#FAACA8", "#21D4FD", "#B721FF", "#08AEEA", "#2AF598", "#2B86C5", "#F7CE68", "#16A085", "#ff6384", "#ffe32c", "#2af598", "#6284FF", "#FF0000", "#FAACA8", "#21D4FD", "#B721FF", "#08AEEA", "#2AF598", "#2B86C5", "#F7CE68", "#16A085", "#ff6384", "#ffe32c", "#2af598", "#6284FF", "#FF0000", "#FAACA8", "#21D4FD", "#B721FF", "#08AEEA", "#2AF598", "#2B86C5", "#F7CE68", "#16A085", "#ff6384", "#ffe32c", "#2af598", "#6284FF", "#FF0000", "#FAACA8", "#21D4FD", "#B721FF", "#08AEEA", "#2AF598", "#2B86C5", "#F7CE68", "#16A085", "#ff6384", "#ffe32c", "#2af598", "#6284FF", "#FF0000", "#FAACA8", "#21D4FD", "#B721FF", "#08AEEA", "#2AF598", "#2B86C5", "#F7CE68", "#16A085", "#ff6384", "#ffe32c", "#2af598", "#6284FF", "#FF0000", "#FAACA8", "#21D4FD", "#B721FF", "#08AEEA", "#2AF598", "#2B86C5", "#F7CE68", "#16A085"],
+				data: referrerNumbers
+			}]
+		}
+		// options: options
+	});
+	var countriesPie = document.getElementById('countries').getContext('2d');
+	new Chart(countriesPie, {
+		type: 'pie',
+		data: {
+			labels: countryLabels,
+			datasets: [{
+				backgroundColor: ["#ff6384", "#ffe32c", "#2af598", "#6284FF", "#FF0000", "#FAACA8", "#21D4FD", "#B721FF", "#08AEEA", "#2AF598", "#2B86C5", "#F7CE68", "#16A085", "#ff6384", "#ffe32c", "#2af598", "#6284FF", "#FF0000", "#FAACA8", "#21D4FD", "#B721FF", "#08AEEA", "#2AF598", "#2B86C5", "#F7CE68", "#16A085", "#ff6384", "#ffe32c", "#2af598", "#6284FF", "#FF0000", "#FAACA8", "#21D4FD", "#B721FF", "#08AEEA", "#2AF598", "#2B86C5", "#F7CE68", "#16A085", "#ff6384", "#ffe32c", "#2af598", "#6284FF", "#FF0000", "#FAACA8", "#21D4FD", "#B721FF", "#08AEEA", "#2AF598", "#2B86C5", "#F7CE68", "#16A085", "#ff6384", "#ffe32c", "#2af598", "#6284FF", "#FF0000", "#FAACA8", "#21D4FD", "#B721FF", "#08AEEA", "#2AF598", "#2B86C5", "#F7CE68", "#16A085", "#ff6384", "#ffe32c", "#2af598", "#6284FF", "#FF0000", "#FAACA8", "#21D4FD", "#B721FF", "#08AEEA", "#2AF598", "#2B86C5", "#F7CE68", "#16A085", "#ff6384", "#ffe32c", "#2af598", "#6284FF", "#FF0000", "#FAACA8", "#21D4FD", "#B721FF", "#08AEEA", "#2AF598", "#2B86C5", "#F7CE68", "#16A085"],
+				data: countryNumbers
+			}]
+		}
+		// options: options
+	});
+}
 
 function saveEdit() {
 	var shortOld = document.getElementById("shortURLold").value;
@@ -201,8 +384,7 @@ function saveEdit() {
 				window.presentEdit = snapshot.exists();
 				if (presentEdit === true) {
 					alert("The new Short URL already exists. Please fix that and submit again.")
-				}
-				else {
+				} else {
 					var db = firebase.database().ref().child("urls");
 					hits = Number(hits);
 					desktop = Number(desktop);
@@ -223,7 +405,8 @@ function saveEdit() {
 function pswrdDivChange(x) {
 	if (x === "focus") {
 		document.getElementById("password-div").style.borderBottom = "1px solid #FA8BFF"
-	} if (x === "blur") {
+	}
+	if (x === "blur") {
 		document.getElementById("password-div").style.borderBottom = "1px solid #a0a0a0"
 	}
 }
@@ -270,40 +453,3 @@ function forgotPassword(d) {
 		loader('bye')
 	}
 }
-
-
-var ctx = document.getElementById('allHits').getContext('2d');
-var chart = new Chart(ctx, {
-	type: 'line',
-
-	data: {
-		labels: ["14th September 2017", "15th September 2017", "16th September 2017", "17th September 2017", "18th September 2017", "19th September 2017", "20th September 2017"],
-		datasets: [{
-			label: "All Hits",
-			backgroundColor: 'rgba(255, 99, 132, 0.1)',
-			borderColor: 'rgb(255, 99, 132)',
-			data: [20,60,80,120,90,5,9],
-		},
-		{
-			label: "Mobile Hits",
-			backgroundColor: 'rgba(255, 227, 44, 0.1)',
-			borderColor: 'rgb(255, 227, 44',
-			data: [15,21,17,89,77,2,5],
-		},
-		{
-			label: "Desktop Hits",
-			backgroundColor: 'rgba(42, 245, 152, 0.1)',
-			borderColor: 'rgb(42, 245, 152',
-			data: [5,39,17,63,13,3,4],
-		}],
-	},
-
-	// Configuration options go here
-	options: {
-		scales: {
-				xAxes: [{
-						stacked: true
-				}]
-		}
-}
-});

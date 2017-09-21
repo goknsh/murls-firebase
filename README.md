@@ -15,7 +15,7 @@ Murls Firebase is a URL Shortener that runs on Firebase for free.
 * Adding URLs is protected by Authentication
 
 ### Current Version: v1.0.0-beta (not production ready)
-Please don't install this version. It is waaaaaaaaaay too buggy (not really, just the URL editor)
+Feel free to install. Need help? Tweet me at @akaankshr4j
 
 ## Installation
 * Coming with v1
@@ -23,13 +23,9 @@ Please don't install this version. It is waaaaaaaaaay too buggy (not really, jus
 ## License
 Undecided. Coming Soon.
 
-## To Do before v1:
-* [X] Editable URLs
-* [X] Collect Analytics
-* [X] Faster Redirects
-* [ ] Make UI
-* [X] Test Auth
-* [X] Test on different browsers
+## Still to Do before v1:
+* Fix URL Editing
+* Fix styles of pages
 
 Made with :heart: and :headphones: by akaanksh
 

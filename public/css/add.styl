@@ -75,6 +75,8 @@ button
 
 .grid
 	display flex
+	.col
+		flex 1
 
 #loggedin 
 	display none
@@ -93,7 +95,10 @@ button
 		width 100%
 	#current
 		flex 2
-		margin 2rem 0.5rem 0 0.5rem
+		margin 0 0.5rem 0 0.5rem
+		overflow-y scroll
+		overflow-x hidden
+		height 100vh
 		.url
 			display flex
 			flex-flow row wrap
@@ -146,7 +151,10 @@ button
 					text-align right
 	#visualization
 		flex 6
-		margin 2rem 0 0 2rem
+		margin 0 0 0 2rem
+		overflow-y scroll
+		overflow-x hidden
+		height 100vh
 
 #loader 
 	display flex

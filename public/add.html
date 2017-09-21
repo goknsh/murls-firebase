@@ -51,15 +51,6 @@
 	</div>
 
 	<div id="loggedin">
-		<div id="new">
-			<h1>Add New URL</h1>
-			<form onsubmit="add();">
-				<input type="text" id="short-url" required placeholder="Short URL">
-				<span onclick="rollDice();">Random</span>
-				<input type="text" id="long-url" required placeholder="Long URL">
-				<button type="submit">Shorten</button>
-			</form>
-		</div>
 		<div class="grid">
 			<div id="current">
 				<h1>Current URLs</h1>
@@ -73,16 +64,24 @@
 					</div>
 					<input class="longURL" type="text" spellcheck="false" ng-model="url.l" readonly/>
 					<div class="grid platform">
-						<span>Desktop Clicks:&nbsp;</span>
-						<input class="desktop" type="text" spellcheck="false" ng-model="url.td" readonly />
-						<span>Mobile Clicks:&nbsp;</span>
-						<input class="mobile" type="text" spellcheck="false" ng-model="url.tm" readonly />
+						<div class="col">
+							<p>Desktop Clicks: <span contenteditable class="desktop">{{url.td}}</span></p>
+						</div>
+						<div class="col">
+							<p>Mobile Clicks: <span contenteditable class="mobile">{{url.tm}}</span></p>
+						</div>
 					</div>
 					<br>
 					<div class="grid">
+						<div class="col">
 						<img class="edit" src="img/edit.svg">
+						</div>
+						<div class="col">
 						<img class="stats" src="img/trending-up.svg" alt="">
+						</div>
+						<div class="col">
 						<img class="delete" src="img/trash.svg" ng-click="urls.$remove(url)">
+						</div>
 					</div>
 				</div>
 			</div>
@@ -90,20 +89,41 @@
 			<div id="visualization">
 				<h1>Data for "<span class="shortURLdata"></span>"</h1>
 				<p>Total Hits, Mobile Hits and Desktop Hits:</p>
-				<canvas id="allHits"></canvas>				
+				<canvas id="allHits"></canvas>
+				<p>All Platforms:</p>
+				<canvas id="platform"></canvas>
+				<div class="grid">
+					<div class="col">
+						<p>Referrer:</p>
+						<canvas id="referrer"></canvas>
+					</div>
+					<div class="col">
+						<p>Countries:</p>
+						<canvas id="countries"></canvas>
+					</div>
+				</div>
 			</div>
 		</div>
-		<div id="edit">
+		<div id="new">
+			<h1>Add New URL</h1>
+			<form onsubmit="add();">
+				<input type="text" id="short-url" required placeholder="Short URL">
+				<span onclick="rollDice();">Random</span>
+				<input type="text" id="long-url" required placeholder="Long URL">
+				<button type="submit">Shorten</button>
+			</form>
+		</div>
+		<!-- <div id="edit">
 			<h1>Edit URL</h1>
 			<div id="edit-modal">
 				<form onsubmit="saveEdit();">
-					<input id="shortURLold" required readonly type="text" spellcheck="false">
-					<input id="shortURLnew" required placeholder="New Short URL" type="text" spellcheck="false">
-					<input id="longURLedit" required type="text" spellcheck="false">
+					<p>Old URL:<input id="shortURLold" required type="text" spellcheck="false">
+					New URL:<input id="shortURLnew" required placeholder="New Short URL" type="text" spellcheck="false">
+					Long URL:<input id="longURLedit" required type="text" spellcheck="false"></p>
 					<button type="submit">Save</button>
 				</form>
 			</div>
-		</div>
+		</div> -->
 
 
 		<button onclick="signOut();">Sign Out</button>
