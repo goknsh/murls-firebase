@@ -335,8 +335,8 @@ var config = {
 firebase.initializeApp(config);
 
 window.projectid = config.projectId;
-window.error = "Unknown Shortened URL";
-window.found = "Found! Redirecting..."
+window.error = "";
+window.found = ""
 
 window.currentURL = window.location.pathname;
 
