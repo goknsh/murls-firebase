@@ -22,30 +22,30 @@ function stats() {
 		var xmlhttp = new XMLHttpRequest();
 		xmlhttp.onreadystatechange = function () {
 			if (this.readyState == 4 && this.status == 200) {
-                var responses = JSON.parse(this.responseText);
-                if (responses.s === 2) {
-                    currentURL = currentURL.replace(/\//g, "")
-                    document.getElementById("info").innerText = 'Stats for "' + currentURL + '"'
-                    document.getElementById("hits").innerText = "Hits: " + responses.th
-                    document.getElementById("desktop").innerText = "Desktop: " + responses.td
-                    document.getElementById("mobile").innerText = "Mobile: " + responses.tm
-                    document.getElementById("long").innerText = "Long URL: " + responses.l
-                    document.getElementById("info-2").innerText = "To see more stats, please login"
-                }
-            }
-            else {
-                document.getElementById("info").innerText = error;
-            }
+        var responses = JSON.parse(this.responseText);
+        if (responses.s === 2) {
+          currentURL = currentURL.replace(/\//g, "")
+					document.getElementById("info").innerText = 'Stats for "' + currentURL + '"'
+					document.getElementById("hits").innerText = "Hits: " + responses.th
+					document.getElementById("desktop").innerText = "Desktop: " + responses.td
+					document.getElementById("mobile").innerText = "Mobile: " + responses.tm
+					document.getElementById("long").innerText = "Long URL: " + responses.l
+					document.getElementById("info-2").innerText = "To see more stats, please login."
+				}
+			}
+			else {
+				document.getElementById("info").innerText = error;
+			}
 		};
-		xmlhttp.open("GET", "https://" + projectid + ".firebaseio.com/urls" + currentURL + '.json', true);
-        xmlhttp.send();
-	} else {
+			xmlhttp.open("GET", "https://" + projectid + ".firebaseio.com/urls" + currentURL + '.json', true);
+      xmlhttp.send();
+	}
+	else {
 		get();
 	}
 }
 
 function get() {
-	console.log("https://" + projectid + ".firebaseio.com/urls" + currentURL + ".json")
 	var xmlhttp = new XMLHttpRequest();
 	xmlhttp.onreadystatechange = function () {
 		if (this.readyState == 4 && this.status == 200) {
@@ -93,7 +93,8 @@ function hits() {
 		m.transaction(function (m) {
 			return (m || 0) + 1;
 		});
-	} else {
+	} 
+	else {
 		var td = firebase.database().ref('urls' + currentURL + '/td');
 		td.transaction(function (d) {
 			return (d || 0) + 1;
@@ -107,26 +108,25 @@ function hits() {
 }
 
 function referrer() {
-    var ref = document.referrer;
-    console.log(ref)
+  var ref = document.referrer;
 	if (ref === "") {
 		var u = firebase.database().ref('urls' + currentURL + '/r/u')
 		u.transaction(function (u) {
 			return (u || 0) + 1;
         });
     platform();
-	} else {
+	} 
+	else {
 		ref = ref.replace(/https:\/\//g, '')
 		ref = ref.replace(/http:\/\//g, '')
 		ref = ref.split('/')[0]
-        ref = window.btoa(ref);
-        console.log(ref)
-        var e = firebase.database().ref('urls' + currentURL + '/r/' + ref)
-        e.transaction(function (e) {
-            return (e || 0) + 1;
+    ref = window.btoa(ref);
+    var e = firebase.database().ref('urls' + currentURL + '/r/' + ref)
+    e.transaction(function (e) {
+      return (e || 0) + 1;
 		});
-	platform();
-    }
+		platform();
+  }
 }
 
 function platform() {
@@ -136,13 +136,13 @@ function platform() {
 		pu.transaction(function (pu) {
 			return (pu || 0) + 1;
 		})
-        ip();
+    ip();
 	} else {
 		var p = firebase.database().ref('urls' + currentURL + '/p/' + plat)
 		p.transaction(function (p) {
 			return (p || 0) + 1;
 		})
-        ip();
+    ip();
     }
 }
 
@@ -167,7 +167,6 @@ function rdr(s) {
 	if (s === 'go') {
 		setTimeout(function() {
 			document.location = longURL;
-			console.log("rdr(s)")
 		}, 1000);
 	}
 	else {
