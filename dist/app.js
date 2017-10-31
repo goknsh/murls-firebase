@@ -56,7 +56,9 @@ function get() {
 				hits();
 			}
 		}
-	// document.getElementById("info").innerText = error;
+		else {
+			document.getElementById("info").innerText = error;
+		}
 	};
 	xmlhttp.open("GET", "https://" + projectid + ".firebaseio.com/urls" + currentURL + ".json", true);
 	xmlhttp.send();
@@ -122,7 +124,8 @@ function referrer() {
         var e = firebase.database().ref('urls' + currentURL + '/r/' + ref)
         e.transaction(function (e) {
             return (e || 0) + 1;
-        });
+		});
+	platform();
     }
 }
 
@@ -153,8 +156,8 @@ function ip() {
 			i.transaction(function (i) {
 				return (i || 0) + 1;
 			})
+			rdr('go')
 		}
-		rdr('go')
 	};
 	xmlhttp.open("GET", "https://freegeoip.net/json/", true);
 	xmlhttp.send();
@@ -164,6 +167,7 @@ function rdr(s) {
 	if (s === 'go') {
 		setTimeout(function() {
 			document.location = longURL;
+			console.log("rdr(s)")
 		}, 1000);
 	}
 	else {
