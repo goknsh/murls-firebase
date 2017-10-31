@@ -45,20 +45,18 @@ function stats() {
 }
 
 function get() {
+	console.log("https://" + projectid + ".firebaseio.com/urls" + currentURL + ".json")
 	var xmlhttp = new XMLHttpRequest();
 	xmlhttp.onreadystatechange = function () {
 		if (this.readyState == 4 && this.status == 200) {
 			var responses = JSON.parse(this.responseText);
 			if (responses.s === 2) {
 				window.longURL = responses.l;
-				hits();
 				document.getElementById("info").innerText = found;
-			} else {
-				document.getElementById("info").innerText = error;
+				hits();
 			}
-		} else {
-			document.getElementById("info").innerText = error;
 		}
+	// document.getElementById("info").innerText = error;
 	};
 	xmlhttp.open("GET", "https://" + projectid + ".firebaseio.com/urls" + currentURL + ".json", true);
 	xmlhttp.send();
@@ -103,7 +101,7 @@ function hits() {
 			return (d || 0) + 1;
 		});
 	}
-    referrer();
+	referrer();
 }
 
 function referrer() {
@@ -116,7 +114,10 @@ function referrer() {
         });
     platform();
 	} else {
-        ref = encodeURIComponent(ref);
+		ref = ref.replace(/https:\/\//g, '')
+		ref = ref.replace(/http:\/\//g, '')
+		ref = ref.split('/')[0]
+        ref = window.btoa(ref);
         console.log(ref)
         var e = firebase.database().ref('urls' + currentURL + '/r/' + ref)
         e.transaction(function (e) {
@@ -162,7 +163,7 @@ function ip() {
 function rdr(s) {
 	if (s === 'go') {
 		setTimeout(function() {
-			// document.location = longURL;
+			document.location = longURL;
 		}, 1000);
 	}
 	else {
