@@ -6,9 +6,10 @@ var config = {
     storageBucket: "murlsfire.appspot.com",
     messagingSenderId: "976393061586"
   };
-  firebase.initializeApp(config);
+firebase.initializeApp(config);
 
 window.projectid = config.projectId;
+
 window.error = "Unknown Shortened URL";
 window.found = ""
 
