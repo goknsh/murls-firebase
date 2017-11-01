@@ -18,11 +18,14 @@ function authState() {
 			if (window.location.pathname === '/dashboard/login.html') {
 				window.location.pathname = '../dashboard/'
 			}
+			var user = firebase.auth().currentUser;
+			user.providerData.forEach(function (profile) {
+				document.getElementById("userEmail").innerText = profile.email;
+			});
 		} else {
 			if (window.location.pathname === '/dashboard/') {
 				window.location.pathname = '../dashboard/login.html'
 			}
-			console.log("login please")
 		}
 	});
 };
@@ -46,4 +49,35 @@ function logIn() {
 function logOut() {
 	firebase.auth().signOut();
 	authState();
+}
+
+function resetPassword() {
+	var user = firebase.auth().currentUser;
+	user.providerData.forEach(function (profile) {
+		var emailAddress = profile.email;
+		firebase.auth().sendPasswordResetEmail(emailAddress).catch(function (error) {
+			openModal('resetPassword')
+			document.getElementById("resetPasswordText").innerText = error.message + " Please refresh and try again.";
+		});
+		openModal('resetPassword')
+		document.getElementById("resetPasswordText").innerText = "A link to reset your password has been sent to " + emailAddress;
+	});
+	closeDropdown('accountSettings')
+}
+
+function openDropdown(type) {
+	document.getElementById(type).className += ' open';
+}
+
+function closeDropdown(type) {
+	document.getElementById(type).classList.remove('open');
+}
+
+function openModal(type) {
+	document.getElementById(type).style.display = 'block';
+}
+
+function closeModal(type) {
+	type = type.replace(/Close/g, '');
+	document.getElementById(type).style.display = 'none';
 }
