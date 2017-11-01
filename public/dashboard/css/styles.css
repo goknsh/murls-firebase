@@ -30,3 +30,7 @@
 #resetPassword {
 	display: none;
 }
+
+.nav-link p {
+	margin: 0;
+}

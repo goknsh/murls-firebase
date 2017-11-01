@@ -1,30 +1,34 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" ng-app="urlEditor">
+
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta http-equiv="X-UA-Compatible" content="ie=edge">
-	
+
 	<link rel="stylesheet" href="https://unpkg.com/clarity-ui/clarity-ui.min.css" type="text/css" />
 	<link rel="stylesheet" href="https://unpkg.com/clarity-icons/clarity-icons.min.css" type="text/css" />
 	<link rel="stylesheet" href="css/styles.css" type="text/css">
 
 	<title>Dashboard | murls/firebase</title>
 </head>
-<body>
-  <script src="https://www.gstatic.com/firebasejs/4.6.0/firebase.js"></script>
-  <script type="text/javascript" src="https://unpkg.com/clarity-icons/clarity-icons.min.js"></script>
-  <script src="js/app.js"></script>
 
-  <header class="header-4 ">
-    <div class="branding">
-        <a href="#" class="nav-link">
-            <clr-icon shape="vm-bug"></clr-icon>
-            <span class="title">murls/firebase</span>
-        </a>
-    </div>
-    <div class="header-actions">
-			<div class="dropdown bottom-right" id="accountSettings">
+<body ng-controller="urlCtrl">
+	<script src="https://www.gstatic.com/firebasejs/4.6.0/firebase.js"></script>
+	<script type="text/javascript" src="https://unpkg.com/clarity-icons/clarity-icons.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.1/angular.min.js"></script>
+	<script src="https://cdn.firebase.com/libs/angularfire/2.3.0/angularfire.min.js"></script>
+	<script src="js/app.js"></script>
+	<div class="main-container">
+		<header class="header-4 ">
+			<div class="branding">
+				<a href="#" class="nav-link">
+					<clr-icon shape="vm-bug"></clr-icon>
+					<span class="title">murls/firebase</span>
+				</a>
+			</div>
+			<div class="header-actions">
+				<div class="dropdown bottom-right" id="accountSettings">
 					<button type="button" class="dropdown-toggle nav-text" onclick="openDropdown('accountSettings');">
 						<span id="userEmail">Your Email</span>
 						<clr-icon shape="caret down"></clr-icon>
@@ -36,16 +40,29 @@
 						<button type="button" class="dropdown-item">Add Users</button>
 						<div class="dropdown-divider"></div>
 						<h4 class="dropdown-header">Miscellaneous</h4>
-						<button type="button" class="dropdown-item">murls/firebase on GitHub</button>
-						<button type="button" class="dropdown-item">Murls Website</button>
+						<a href="https://github.com/murls/firebase" class="dropdown-item">murls/firebase on GitHub</a>
+						<a href="https://murls.ga" class="dropdown-item">Murls Website</a>
 						<button type="button" class="dropdown-item">Check for Updates</button>
 					</div>
 				</div>
+			</div>
+		</header>
+		<div class="content-container">
+			<div class="content-area">
+				...
+			</div>
+			<nav class="sidenav">
+				<section class="sidenav-content">
+					<div class="nav-link" ng-repeat="url in urls">
+                    	<p>{{url.$id}} &mdash; {{url.l}}</p>
+                	</a>
+				</section>
+			</nav>
+		</div>
 	</div>
-</header>
 
 	<div id="resetPassword">
-	<div class="modal">
+		<div class="modal">
 			<div class="modal-dialog" role="dialog" aria-hidden="true">
 				<div class="modal-content">
 					<div class="modal-header">
@@ -63,8 +80,9 @@
 				</div>
 			</div>
 		</div>
-	<div class="modal-backdrop" aria-hidden="true"></div>
-</div>
-	
+		<div class="modal-backdrop" aria-hidden="true"></div>
+	</div>
+
 </body>
+
 </html>

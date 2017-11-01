@@ -12,6 +12,12 @@ window.projectid = config.projectId;
 
 authState();
 
+var app = angular.module("urlEditor", ["firebase"]);
+app.controller("urlCtrl", function ($scope, $firebaseArray) {
+	var ref = firebase.database().ref().child("urls");
+	$scope.urls = $firebaseArray(ref);
+});
+
 function authState() {
 	firebase.auth().onAuthStateChanged(function (user) {
 		if (user) {
@@ -65,8 +71,14 @@ function resetPassword() {
 	closeDropdown('accountSettings')
 }
 
+var count = 0
 function openDropdown(type) {
 	document.getElementById(type).className += ' open';
+	count += 1;
+	console.log(count % 2)
+	if (count % 2 === 0) {
+		closeDropdown(type)
+	}
 }
 
 function closeDropdown(type) {
