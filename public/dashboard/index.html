@@ -48,14 +48,17 @@
 			</div>
 		</header>
 		<div class="content-container">
-			<div class="content-area">
-				...
+			<div style="text-align:center;" class="content-area">
+				<h1>Stats for the Selected Short URL will appear here</h1>
+				<clr-icon size="100" shape="line-chart"></clr-icon>
 			</div>
 			<nav class="sidenav">
 				<section class="sidenav-content">
-					<div class="nav-link" ng-repeat="url in urls">
-                    	<p>{{url.$id}} &mdash; {{url.l}}</p>
-                	</a>
+					<section class="nav-group collapsible">
+						<ul class="nav-list" ng-repeat="url in urls">
+							<li class="nav-link">{{url.$id}} &mdash; {{url.l}}</li>
+						</ul>
+				</section>
 				</section>
 			</nav>
 		</div>
