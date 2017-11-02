@@ -34,3 +34,11 @@
 .nav-link p {
 	margin: 0;
 }
+
+.main-container .content-container .content-area {
+	padding: 0.5rem 2rem;
+}
+
+.no-margin {
+	margin: 0;
+}

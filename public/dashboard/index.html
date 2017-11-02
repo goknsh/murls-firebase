@@ -47,10 +47,18 @@
 				</div>
 			</div>
 		</header>
+		
 		<div class="content-container">
-			<div style="text-align:center;" class="content-area">
-				<h1>Stats for the Selected Short URL will appear here</h1>
-				<clr-icon size="100" shape="line-chart"></clr-icon>
+			<div class="content-area">
+				<div id="{{url.$id}}" ng-repeat="url in urls">
+					<h3>Data for "{{url.$id}}"</h3>
+					<h5 class="no-margin">Long URL: {{url.l}}</h5>
+					<h5 class="no-margin">Total hits: {{url.th}}</h5>
+					<h5 class="no-margin">Desktop Hits: {{url.td}}
+					<h5 class="no-margin">Mobile Hits: {{url.th}}</h5>
+
+					<h3>Analytics:</h3>
+				</div>
 			</div>
 			<nav class="sidenav">
 				<section class="sidenav-content">
