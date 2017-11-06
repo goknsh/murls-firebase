@@ -35,8 +35,15 @@
 	margin: 0;
 }
 
-.main-container .content-container .content-area {
-	padding: 0.5rem 2rem;
+.content-container .table-container {
+	max-width: 960px;
+	width: 100%;
+	margin: 0 auto;
+	padding: 0 1rem;
+	/*display: flex;*/
+	/*align-items: center;*/
+	/*justify-content: center;*/
+	/*flex-direction: column;*/
 }
 
 .no-margin {
