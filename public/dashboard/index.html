@@ -50,25 +50,41 @@
 		</header>
 		
 		<div class="content-container">
-		    <div class="table-container">
-			<table class="table">
-                <thead>
-                    <tr>
-                        <th class="left">Short URL</th>
-                        <th class="left">Long URL</th>
-                        <th class="left">All Clicks</th>
-                        <th class="left">Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr ng-repeat="url in urls">
-                        <td class="left">{{url.$id}}</td>
-                        <td class="left">{{url.l}}</td>
-                        <td class="left">{{url.th}}</td>
-                        <td class="left">edit - delete - analytics</td>
-                    </tr>
-                </tbody>
-            </table>
+		    <div class="inner-container">
+				<form onsubmit="add();">
+					<h2 class="no-margin">Shorten your URL</h2>
+					<div class="row form-group">
+			            <!--<label for="formFields_1">Textbox [type="text"]</label>-->
+			            <div class="col-xs-6"><input required spellcheck="false" class="full-width" type="url" placeholder="Long URL"></div>
+			            <div class="col-xs-4"><input required spellcheck="false" style="width:80%" type="text" placeholder="Short URL"><clr-icon style="width:20%" shape="wand"></clr-icon></div>
+			            <div class="col-xs-2"><button class="btn btn-link" type="submit">Shorten URL</button></div>
+			        </div>
+				</form>
+				
+				<table class="table">
+	                <thead>
+	                    <tr>
+	                        <th class="left">Short URL</th>
+	                        <th class="left">Long URL</th>
+	                        <th class="left">All Clicks</th>
+	                        <th class="left">Actions</th>
+	                    </tr>
+	                </thead>
+	                <tbody>
+	                    <tr class="url-row" ng-repeat="url in urls">
+	                    	<td title="Short URL" class="left center"><a ng-href="#{{url.$id}}">{{url.$id}}</a></td>
+		                    <td title="Long URL" class="left"><a ng-href="{{url.l}}" target="_blank">{{url.l}}</a></td>
+		                    <td title="Total Clicks Recorded" class="left">{{url.th}}</td>
+		                    <td class="left url-actions">
+		                    	<div class="btn-group btn-sm">
+								    <button title="Edit URL" class="btn btn-icon"><clr-icon shape="pencil" size="16"></clr-icon></button>
+								    <button title="View Statistics for URL" class="btn btn-icon"><clr-icon shape="line-chart" size="16"></clr-icon></button>
+								    <button title="Delete URL" class="btn btn-icon"><clr-icon shape="trash" size="16"></clr-icon></button>
+								</div>
+		                    </td>
+	                    </tr>
+	                </tbody>
+	            </table>
             </div>
 		</div>
 	</div>
