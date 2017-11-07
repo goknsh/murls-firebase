@@ -52,32 +52,32 @@
 		<div class="content-container">
 		    <div class="inner-container">
 				<form onsubmit="add();">
-					<h2 class="no-margin">Shorten your URL</h2>
-					<div class="row form-group">
-			            <!--<label for="formFields_1">Textbox [type="text"]</label>-->
+					<h1>Shorten your URL</h1>
+					<div class="row form-group add-url-container">
 			            <div class="col-xs-6"><input required spellcheck="false" class="full-width" type="url" placeholder="Long URL"></div>
-			            <div class="col-xs-4"><input required spellcheck="false" style="width:80%" type="text" placeholder="Short URL"><clr-icon style="width:20%" shape="wand"></clr-icon></div>
+			            <div class="col-xs-4"><input spellcheck="false" class="full-width" type="text" placeholder="Short URL (leave empty to randomize)"></div>
 			            <div class="col-xs-2"><button class="btn btn-link" type="submit">Shorten URL</button></div>
 			        </div>
 				</form>
 				
 				<table class="table">
+					<h3>Quick Analytics</h3>
 	                <thead>
 	                    <tr>
-	                        <th class="left">Short URL</th>
-	                        <th class="left">Long URL</th>
-	                        <th class="left">All Clicks</th>
-	                        <th class="left">Actions</th>
+	                        <th class="left short-url-col">Short URL</th>
+	                        <th class="left long-url-col">Long URL</th>
+	                        <th class="left all-clicks-col">All Clicks</th>
+	                        <th class="left actions-col">Actions</th>
 	                    </tr>
 	                </thead>
 	                <tbody>
 	                    <tr class="url-row" ng-repeat="url in urls">
-	                    	<td title="Short URL" class="left center"><a ng-href="#{{url.$id}}">{{url.$id}}</a></td>
-		                    <td title="Long URL" class="left"><a ng-href="{{url.l}}" target="_blank">{{url.l}}</a></td>
-		                    <td title="Total Clicks Recorded" class="left">{{url.th}}</td>
-		                    <td class="left url-actions">
+	                    	<td title="Short URL" class="left short-url-col"><a ng-href="#{{url.$id}}">{{url.$id}}</a></td>
+		                    <td title="Long URL" class="left long-url-col"><a ng-href="{{url.l}}" target="_blank">{{url.l}}</a></td>
+		                    <td title="Total Clicks Recorded" class="left all-clicks-col">{{url.th}}</td>
+		                    <td class="left url-actions actions-col">
 		                    	<div class="btn-group btn-sm">
-								    <button title="Edit URL" class="btn btn-icon"><clr-icon shape="pencil" size="16"></clr-icon></button>
+							    	<button onclick="editURL(this);" shorturl="{{url.$id}}" longurl="{{url.l}}" title="Edit URL" class="btn btn-icon"><clr-icon shape="pencil" size="16"></clr-icon></button>
 								    <button title="View Statistics for URL" class="btn btn-icon"><clr-icon shape="line-chart" size="16"></clr-icon></button>
 								    <button title="Delete URL" class="btn btn-icon"><clr-icon shape="trash" size="16"></clr-icon></button>
 								</div>
@@ -85,6 +85,15 @@
 	                    </tr>
 	                </tbody>
 	            </table>
+		
+				<div class="footer">
+					<div class="row">
+						<div class="col-xs">&copy; Murls OSS</div>
+						<div class="col-xs">Get a Tour</div>
+						<div class="col-xs">Current Version: v0.5.0</div>
+						<div class="col-xs"><a href="https://github.com/murls/firebase" target="_blank">GitHub</a></div>
+					</div>
+				</div>
             </div>
 		</div>
 	</div>
@@ -104,6 +113,33 @@
 					</div>
 					<div class="modal-footer">
 						<button class="btn btn-primary" type="button" onclick="closeModal(this.id)" id="resetPasswordClose">Ok</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="modal-backdrop" aria-hidden="true"></div>
+	</div>
+	
+	<div id="editURL">
+		<div class="modal">
+			<div class="modal-dialog" role="dialog" aria-hidden="true">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button aria-label="Close" onclick="closeModal(this.id)" class="close" type="button" id="editURLClose">
+							<clr-icon aria-hidden="true" shape="close"></clr-icon>
+						</button>
+						<h3 class="modal-title">Edit URL</h3>
+					</div>
+					<div class="modal-body">
+						<p>You can change the Current Short URL and the Long URL. Click 'Confirm Edits' when you are done. All the stats will remain.</p><br>
+						<div class="row form-group">
+			            	<div class="col-xs"><input required spellcheck="false" class="full-width" type="url" value="Current Short URL" id="editing-current-short-url"></div><clr-icon shape="arrow right" size="20"></clr-icon>
+			            	<div class="col-xs"><input spellcheck="false" class="full-width" type="text" placeholder="New Short URL" id="editing-new-short-url"></div>
+			        	</div><br>
+			            	<input required spellcheck="false" class="full-width" type="url" placeholder="Long URL" id="editing-long-url">
+					</div>
+					<div class="modal-footer">
+						<button class="btn btn-primary" type="button" onclick="closeModal(this.id)" id="editURLClose">Confirm Edits</button>
 					</div>
 				</div>
 			</div>

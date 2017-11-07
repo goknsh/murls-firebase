@@ -27,7 +27,7 @@
 	margin-top: 0.5rem;
 }
 
-#resetPassword {
+#resetPassword, #editURL {
 	display: none;
 }
 
@@ -36,7 +36,7 @@
 }
 
 .content-container .inner-container {
-	max-width: 960px;
+	max-width: 1000px;
 	width: 100%;
 	margin: 0 auto;
 	padding: 0 1rem;
@@ -58,4 +58,29 @@ form .form-group {
 
 .full-width {
 	width: 100% !important;
+}
+
+.short-url-col {
+	width: auto;
+}
+
+.long-url-col {
+	width: 45%;
+}
+
+.all-clicks-col {
+	width: auto;
+}
+
+.actions-col {
+	width: auto;
+}
+
+.add-url-container {
+	margin: 0.5rem 0;
+}
+
+.footer {
+	margin: 1rem 0;
+	text-align: center;
 }

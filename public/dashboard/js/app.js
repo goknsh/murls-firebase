@@ -71,6 +71,14 @@ function resetPassword() {
 	closeDropdown('accountSettings')
 }
 
+function editURL(edit) {
+	var oldShortURL = edit.attributes.shorturl.value;
+	// console.log(oldShortURL)
+	var longURL = edit.attributes.longurl.value;
+	openModal('editURL')
+	// document.getElementById('editing-current-url').value = String(oldShortURL)
+}
+
 var count = 0
 function openDropdown(type) {
 	document.getElementById(type).className += ' open';
