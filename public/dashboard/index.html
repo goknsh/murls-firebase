@@ -51,11 +51,11 @@
 		
 		<div class="content-container">
 		    <div class="inner-container">
-				<form onsubmit="add();">
+				<form onsubmit="addURL();">
 					<h1>Shorten your URL</h1>
 					<div class="row form-group add-url-container">
-			            <div class="col-xs-6"><input required spellcheck="false" class="full-width" type="url" placeholder="Long URL"></div>
-			            <div class="col-xs-4"><input spellcheck="false" class="full-width" type="text" placeholder="Short URL (leave empty to randomize)"></div>
+			            <div class="col-xs-6"><input id="add-long-url" required spellcheck="false" class="full-width" type="url" placeholder="Long URL"></div>
+			            <div class="col-xs-4"><input id="add-short-url" spellcheck="false" class="full-width" type="text" placeholder="Short URL (leave empty to randomize)"></div>
 			            <div class="col-xs-2"><button class="btn btn-link" type="submit">Shorten URL</button></div>
 			        </div>
 				</form>
@@ -133,7 +133,7 @@
 					<div class="modal-body">
 						<p>You can change the Current Short URL and the Long URL. Click 'Confirm Edits' when you are done. All the stats will remain.</p><br>
 						<div class="row form-group">
-			            	<div class="col-xs"><input required spellcheck="false" class="full-width" type="url" value="Current Short URL" id="editing-current-short-url"></div><clr-icon shape="arrow right" size="20"></clr-icon>
+			            	<div class="col-xs"><input required spellcheck="false" class="full-width" type="url" placeholder="Current Short URL" id="editing-current-short-url"></div><clr-icon shape="arrow right" size="26"></clr-icon>
 			            	<div class="col-xs"><input spellcheck="false" class="full-width" type="text" placeholder="New Short URL" id="editing-new-short-url"></div>
 			        	</div><br>
 			            	<input required spellcheck="false" class="full-width" type="url" placeholder="Long URL" id="editing-long-url">
