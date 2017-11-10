@@ -65,13 +65,61 @@ function resetPassword() {
 	closeDropdown('accountSettings')
 }
 
-function editURL(urlData) {
-	var oldShortURL = urlData.attributes.shorturl.value;
-	var longURL = urlData.attributes.longurl.value;
+function openEditURLModal(urlData) {
+	var editURLOldShortURL = urlData.attributes.shorturl.value;
+	var editURLLongURL = urlData.attributes.longurl.value;
 	openModal('editURL')
-	document.getElementById('editing-current-short-url').value = oldShortURL;
-	document.getElementById('editing-new-short-url').value = oldShortURL;
-	document.getElementById('editing-long-url').value = longURL;
+	document.getElementById('editing-current-short-url').value = editURLOldShortURL;
+	document.getElementById('editing-new-short-url').value = editURLOldShortURL;
+	document.getElementById('editing-long-url').value = editURLLongURL;
+}
+
+function editURL() {
+	var editURLOldShortURL = document.getElementById('editing-current-short-url').value;
+	var editURLNewShortURL = document.getElementById('editing-new-short-url').value;
+	var editURLLongURL = document.getElementById('editing-long-url').value;
+	var shortURLhasSlash = editURLNewShortURL.includes("/");
+	var shortURLhasDot = editURLNewShortURL.includes(".");
+	var shortURLhasHash = editURLNewShortURL.includes("#");
+	var shortURLhasDollar = editURLNewShortURL.includes("$");
+	var shortURLhasLeftBrace = editURLNewShortURL.includes("[");
+	var shortURLhasRightBrace = editURLNewShortURL.includes("]");
+	if (shortURLhasSlash === true || shortURLhasDot === true || shortURLhasHash === true || shortURLhasDollar === true || shortURLhasLeftBrace === true || shortURLhasRightBrace === true) {
+		document.getElementById('editURL-error').style.display = 'block';
+		document.getElementById('editURL-error-text').innerText = "Short URLs cannot contain '/' or '.' or '#' or '$' '[' or ']' Please fix that and click \"Confirm Edits\" again";
+		die();
+	}
+	else {
+		var db = firebase.database().ref("urls/" + editURLNewShortURL);
+		db.once("value").then(function (snapshot) {
+			var present = snapshot.exists();
+			if (editURLOldShortURL === editURLNewShortURL) {
+				document.getElementById('editURL-error').style.display = 'none';
+				document.getElementById('editURL-error-text').innerText = '';
+				var db = firebase.database().ref("urls");
+					db.child(editURLOldShortURL).update({
+						l: editURLLongURL
+					});
+				die();
+			}
+			if (present === true) {
+				document.getElementById('editURL-error').style.display = 'block';
+				document.getElementById('editURL-error-text').innerText = 'The Short URL ' + editURLNewShortURL + ' already exists, please fix and click "Confirm Edits" again';
+				die();
+			}
+			else {
+				document.getElementById('editURL-error').style.display = 'none';
+				document.getElementById('editURL-error-text').innerText = '';
+				var db = firebase.database().ref("urls");
+				var child = db.child(editURLOldShortURL);
+				child.once('value', function(snapshot) {
+				  db.child(editURLNewShortURL).set(snapshot.val());
+				  child.remove();
+				});
+				die();
+			}
+		});
+	}
 }
 
 function deleteURL(urlData) {
@@ -172,5 +220,5 @@ function loader(type,status) {
 		}
 		if (status === 'on') {
 			document.getElementById(type).style.display = 'static';
-		}}, 1000);
+	}}, 1000);
 }

@@ -31,6 +31,10 @@
 	display: none;
 }
 
+#editURL-error {
+	display: none;
+}
+
 .nav-link p {
 	margin: 0;
 }
