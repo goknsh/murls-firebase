@@ -84,6 +84,10 @@ form .form-group {
 	margin: 0.5rem 0;
 }
 
+.alert {
+	margin-bottom: 1rem;
+}
+
 #inlineTableLoader {
 	display: static;
 }

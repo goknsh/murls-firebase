@@ -147,16 +147,18 @@
 						        </div>
 						    </div>
 						</div>
-						<p>You can change the Current Short URL and the Long URL. Click 'Confirm Edits' when you are done. All the stats will remain.</p><br>
+						<p class="no-margin">You can change the Current Short URL and the Long URL. Click 'Confirm Edits' when you are done. All the stats will remain.</p><br>
+						<form>
 						<div class="row form-group">
-			            	<div class="col-xs"><input required spellcheck="false" class="full-width" type="text" placeholder="Current Short URL" id="editing-current-short-url"></div><clr-icon shape="arrow right" size="26"></clr-icon>
-			            	<div class="col-xs"><input spellcheck="false" class="full-width" type="text" placeholder="New Short URL" id="editing-new-short-url"></div>
+			            	<div class="col-xs"><input required readonly spellcheck="false" class="full-width" type="text" placeholder="Current Short URL" id="editing-current-short-url"></div><clr-icon shape="arrow right" size="26"></clr-icon>
+			            	<div class="col-xs"><input required spellcheck="false" class="full-width" type="text" placeholder="New Short URL" id="editing-new-short-url"></div>
 			        	</div><br>
 			            	<input required spellcheck="false" class="full-width" type="url" placeholder="Long URL" id="editing-long-url">
 					</div>
 					<div class="modal-footer">
 						<button class="btn btn-primary" type="submit" onclick="editURL();" id="editURLClose">Confirm Edits</button>
 					</div>
+					</form>
 				</div>
 			</div>
 		</div>

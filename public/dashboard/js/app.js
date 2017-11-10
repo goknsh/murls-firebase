@@ -84,9 +84,9 @@ function editURL() {
 	var shortURLhasDollar = editURLNewShortURL.includes("$");
 	var shortURLhasLeftBrace = editURLNewShortURL.includes("[");
 	var shortURLhasRightBrace = editURLNewShortURL.includes("]");
-	if (shortURLhasSlash === true || shortURLhasDot === true || shortURLhasHash === true || shortURLhasDollar === true || shortURLhasLeftBrace === true || shortURLhasRightBrace === true) {
+	if (editURLNewShortURL === "" || shortURLhasSlash === true || shortURLhasDot === true || shortURLhasHash === true || shortURLhasDollar === true || shortURLhasLeftBrace === true || shortURLhasRightBrace === true) {
 		document.getElementById('editURL-error').style.display = 'block';
-		document.getElementById('editURL-error-text').innerText = "Short URLs cannot contain '/' or '.' or '#' or '$' '[' or ']' Please fix that and click \"Confirm Edits\" again";
+		document.getElementById('editURL-error-text').innerText = "Short URLs cannot contain '/' or '.' or '#' or '$' '[' or ']' or be empty. Please fix that and click \"Confirm Edits\" again";
 		die();
 	}
 	else {
@@ -100,6 +100,7 @@ function editURL() {
 					db.child(editURLOldShortURL).update({
 						l: editURLLongURL
 					});
+				document.getElementById('editURL').style.display = 'none';
 				die();
 			}
 			if (present === true) {
@@ -116,6 +117,7 @@ function editURL() {
 				  db.child(editURLNewShortURL).set(snapshot.val());
 				  child.remove();
 				});
+				document.getElementById('editURL').style.display = 'none';
 				die();
 			}
 		});
