@@ -27,7 +27,7 @@
 	margin-top: 0.5rem;
 }
 
-#resetPassword, #editURL {
+#resetPassword, #editURL, #error {
 	display: none;
 }
 
@@ -78,6 +78,10 @@ form .form-group {
 
 .add-url-container {
 	margin: 0.5rem 0;
+}
+
+#inlineTableLoader {
+	display: static;
 }
 
 .footer {

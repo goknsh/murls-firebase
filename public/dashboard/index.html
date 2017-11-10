@@ -71,6 +71,12 @@
 	                    </tr>
 	                </thead>
 	                <tbody>
+	                	<tr id="inlineTableLoader">
+	                		<td colspan="4">
+	                			<span class="spinner spinner-inline">Loading...</span>
+								<span>Loading...</span>
+							</td>
+						</tr>
 	                    <tr class="url-row" ng-repeat="url in urls">
 	                    	<td title="Short URL" class="left short-url-col"><a ng-href="#{{url.$id}}">{{url.$id}}</a></td>
 		                    <td title="Long URL" class="left long-url-col"><a ng-href="{{url.l}}" target="_blank">{{url.l}}</a></td>
@@ -79,7 +85,7 @@
 		                    	<div class="btn-group btn-sm">
 							    	<button onclick="editURL(this);" shorturl="{{url.$id}}" longurl="{{url.l}}" title="Edit URL" class="btn btn-icon"><clr-icon shape="pencil" size="16"></clr-icon></button>
 								    <button title="View Statistics for URL" class="btn btn-icon"><clr-icon shape="line-chart" size="16"></clr-icon></button>
-								    <button title="Delete URL" class="btn btn-icon"><clr-icon shape="trash" size="16"></clr-icon></button>
+								    <button onclick="deleteURL(this);" shorturl="{{url.$id}}" title="Delete URL" class="btn btn-icon"><clr-icon shape="trash" size="16"></clr-icon></button>
 								</div>
 		                    </td>
 	                    </tr>
@@ -120,6 +126,28 @@
 		<div class="modal-backdrop" aria-hidden="true"></div>
 	</div>
 	
+	<div id="error">
+		<div class="modal">
+			<div class="modal-dialog" role="dialog" aria-hidden="true">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button aria-label="Close" onclick="closeModal(this.id)" class="close" type="button" id="errorClose">
+							<clr-icon aria-hidden="true" shape="close"></clr-icon>
+						</button>
+						<h3 class="modal-title">An Error Occured</h3>
+					</div>
+					<div class="modal-body">
+						<p id="errorText"></p>
+					</div>
+					<div class="modal-footer">
+						<button class="btn btn-primary" type="button" onclick="closeModal(this.id)" id="errorClose">Ok</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="modal-backdrop" aria-hidden="true"></div>
+	</div>
+	
 	<div id="editURL">
 		<div class="modal">
 			<div class="modal-dialog" role="dialog" aria-hidden="true">
@@ -132,6 +160,7 @@
 					</div>
 					<div class="modal-body">
 						<p>You can change the Current Short URL and the Long URL. Click 'Confirm Edits' when you are done. All the stats will remain.</p><br>
+						<form onsubmit="editURL();">
 						<div class="row form-group">
 			            	<div class="col-xs"><input required spellcheck="false" class="full-width" type="url" placeholder="Current Short URL" id="editing-current-short-url"></div><clr-icon shape="arrow right" size="26"></clr-icon>
 			            	<div class="col-xs"><input spellcheck="false" class="full-width" type="text" placeholder="New Short URL" id="editing-new-short-url"></div>
@@ -139,8 +168,9 @@
 			            	<input required spellcheck="false" class="full-width" type="url" placeholder="Long URL" id="editing-long-url">
 					</div>
 					<div class="modal-footer">
-						<button class="btn btn-primary" type="button" onclick="closeModal(this.id)" id="editURLClose">Confirm Edits</button>
+						<button class="btn btn-primary" type="submit" onclick="closeModal(this.id)" id="editURLClose">Confirm Edits</button>
 					</div>
+						</form>
 				</div>
 			</div>
 		</div>

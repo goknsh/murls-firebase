@@ -30,15 +30,14 @@ var app = angular.module("urlEditor", ["firebase"]);
 app.controller("urlCtrl", function ($scope, $firebaseArray) {
 	var ref = firebase.database().ref().child("urls");
 	$scope.urls = $firebaseArray(ref);
+	loader('inlineTableLoader','off');
 });
 
 function logIn() {
 	var email = document.getElementById("email").value;
 	var password = document.getElementById("password").value;
 	firebase.auth().signInWithEmailAndPassword(email, password).catch(function (error) {
-		var errorCode = error.code;
 		var errorMessage = error.message;
-		console.log(error.message)
 		document.getElementById("error").style.opacity = "1";
 		document.getElementById("error").innerText = error.message;
 		setTimeout(function () {
@@ -66,13 +65,22 @@ function resetPassword() {
 	closeDropdown('accountSettings')
 }
 
-function editURL(edit) {
-	var oldShortURL = edit.attributes.shorturl.value;
-	var longURL = edit.attributes.longurl.value;
+function editURL(urlData) {
+	var oldShortURL = urlData.attributes.shorturl.value;
+	var longURL = urlData.attributes.longurl.value;
 	openModal('editURL')
 	document.getElementById('editing-current-short-url').value = oldShortURL;
 	document.getElementById('editing-new-short-url').value = oldShortURL;
 	document.getElementById('editing-long-url').value = longURL;
+}
+
+function deleteURL(urlData) {
+	var shortURL = urlData.attributes.shorturl.value;
+	var urlInDB = firebase.database().ref("urls/" + shortURL);
+	urlInDB.remove().catch(function (error) {
+		openModal('error');
+		document.getElementById('errorText').innerText = error.message;
+	});
 }
 
 function addURL() {
@@ -155,4 +163,14 @@ function openModal(type) {
 function closeModal(type) {
 	type = type.replace(/Close/g, '');
 	document.getElementById(type).style.display = 'none';
+}
+
+function loader(type,status) {
+	setTimeout(function(){
+		if (status === 'off') {
+			document.getElementById(type).style.display = 'none';
+		}
+		if (status === 'on') {
+			document.getElementById(type).style.display = 'static';
+		}}, 1000);
 }

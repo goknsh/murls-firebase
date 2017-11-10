@@ -168,7 +168,7 @@ function rdr(s) {
 	if (s === 'go') {
 		setTimeout(function() {
 			document.location = longURL;
-		}, 1000);
+		}, 300);
 	}
 	else {
 		document.getElementById("info").innerText = error;
