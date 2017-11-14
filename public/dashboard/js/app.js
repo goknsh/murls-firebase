@@ -222,5 +222,5 @@ function loader(type,status) {
 		}
 		if (status === 'on') {
 			document.getElementById(type).style.display = 'static';
-	}}, 1000);
+	}}, 1300);
 }
