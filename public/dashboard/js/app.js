@@ -143,7 +143,8 @@ function addURL() {
 	var shortURLhasLeftBrace = shortURL.includes("[");
 	var shortURLhasRightBrace = shortURL.includes("]");
 	if (shortURLhasSlash === true || shortURLhasDot === true || shortURLhasHash === true || shortURLhasDollar === true || shortURLhasLeftBrace === true || shortURLhasRightBrace === true) {
-		alert("Short URLs cannot contain '/' or '.' or '#' or '$' '[' or ']' Please fix that and click submit again")
+		openModal('error')
+		document.getElementById('errorText').innerText = "Short URLs cannot contain '/' or '.' or '#' or '$' '[' or ']' Please fix that and click submit again";
 		die();
 	}
 	if (shortURL === '') {
@@ -168,7 +169,8 @@ function addURL() {
 		dbCheck.once("value").then(function (snapshot) {
 			var present = snapshot.exists();
 			if (present === true) {
-				alert("The new Short URL already exists. Please fix that and submit again, or edit the Short URL.")
+				openModal('error')
+				document.getElementById('errorText').innerText = "The new Short URL already exists. Please fix that and submit again, or edit the Short URL."
 			}
 			else {
 				var dt = new Date();
@@ -185,6 +187,18 @@ function addURL() {
 					s: 2,
 					fe: date
 				});
+				db.child(shortURL).child('d').set({
+					[date]: 0
+				});
+				db.child(shortURL).child('h').set({
+					[date]: 0
+				});
+				db.child(shortURL).child('m').set({
+					[date]: 0
+				});
+				db.child(shortURL).child('le').set({
+					le: date
+				});
 				document.getElementById("add-long-url").value = '';
 				document.getElementById("add-short-url").value = '';
 			}
@@ -192,11 +206,265 @@ function addURL() {
 	}
 }
 
+function viewStats(urlData) {
+	var shortURL = urlData.attributes.shorturl.value;
+	var longURL = urlData.attributes.longurl.value;
+	var xmlhttp = new XMLHttpRequest();
+		xmlhttp.onreadystatechange = function () {
+			if (this.readyState == 4 && this.status == 200) {
+				var responses = JSON.parse(this.responseText);
+				var startDate = responses.fe;
+				startDate = startDate.split("-")
+				startDate = startDate[2] + "-" + startDate[1] + "-" + startDate[0]
+				console.log(startDate)
+				// console.log(responses.le.le)
+				var endDate = responses.le.le;
+				endDate = endDate.split("-")
+				endDate = endDate[2] + "-" + endDate[1] + "-" + endDate[0]
+				var start = new Date(String(startDate));
+				var end = new Date(String(endDate));
+				var newend = end.setDate(end.getDate() + 1);
+				var end = new Date(newend);
+				if (responses.p === undefined) {
+					openModal('notEnoughData')
+					die();
+				}
+				else {
+					var platforms = responses.p;
+					platforms = JSON.stringify(platforms)
+					platforms = platforms.split(',')
+					var numberOfPlatforms = platforms.length;
+					var replaceNum;
+					window.platformLabels = []
+					window.platformNumbers = []
+					// console.log(referrer)
+					for (replaceNum = 0; replaceNum < numberOfPlatforms; replaceNum++) {
+						platforms[replaceNum] = platforms[replaceNum].replace(/{"/g, "")
+						platforms[replaceNum] = platforms[replaceNum].replace(/"/g, '')
+						platforms[replaceNum] = platforms[replaceNum].replace(/}/g, '')
+						platforms[replaceNum] = platforms[replaceNum].split(":")
+						platformLabels.push(platforms[replaceNum][0])
+						platformNumbers.push(platforms[replaceNum][1])
+					}
+					var referrer = JSON.stringify(responses.r);
+					referrer = referrer.split(',')
+					var numberOfReferrers = referrer.length;
+					window.referrerLabels = []
+					window.referrerNumbers = []
+					for (replaceNum = 0; replaceNum < numberOfReferrers; replaceNum++) {
+						referrer[replaceNum] = referrer[replaceNum].replace(/{"/g, "")
+						referrer[replaceNum] = referrer[replaceNum].replace(/"/g, '')
+						referrer[replaceNum] = referrer[replaceNum].replace(/}/g, '')
+						referrer[replaceNum] = referrer[replaceNum].replace(/&/g, '.')
+						referrer[replaceNum] = referrer[replaceNum].split(":")
+						console.log(referrer[replaceNum][0])
+						// referrer[replaceNum] = ;
+						console.log(referrer[replaceNum][0])
+						referrerLabels.push(window.atob(referrer[replaceNum][0]))
+						referrerNumbers.push(referrer[replaceNum][1])
+					}
+					var countries = JSON.stringify(responses.c);
+					countries = countries.split(',')
+					var numberOfCountries = countries.length;
+					window.countryLabels = []
+					window.countryNumbers = []
+					for (replaceNum = 0; replaceNum < numberOfCountries; replaceNum++) {
+						countries[replaceNum] = countries[replaceNum].replace(/{"/g, "")
+						countries[replaceNum] = countries[replaceNum].replace(/"/g, '')
+						countries[replaceNum] = countries[replaceNum].replace(/}/g, '')
+						countries[replaceNum] = countries[replaceNum].replace(/&/g, '.')
+						countries[replaceNum] = countries[replaceNum].replace(/u/g, 'Unknown')
+						countries[replaceNum] = countries[replaceNum].split(":")
+						countryLabels.push(countries[replaceNum][0])
+						countryNumbers.push(countries[replaceNum][1])
+					}
+					// console.log("Labels "+countryLabels)
+					// console.log("Numbers "+countryNumbers)
+					window.labels = []
+					window.desktop = []
+					window.mobile = []
+					window.hits = []
+					console.log(start)
+					while (start < end) {
+						// var responses = JSON.parse(this.responseText); 
+						var dateIs = start.getUTCDate() + "-" + (start.getUTCMonth() + 1) + "-" + start.getUTCFullYear()
+						labels.push(dateIs);
+						console.log(dateIs)
+						var dateIs = start.getUTCDate() + "-" + (start.getUTCMonth() + 1) + "-" + start.getUTCFullYear()
+						var oneHit = responses.h[dateIs];
+						var oneDesktopHit = responses.d[dateIs]
+						var oneMobileHit = responses.m[dateIs]
+						if (oneHit === undefined) {
+							hits.push(0)
+						} else {
+							hits.push(oneHit)
+						}
+						if (oneDesktopHit === undefined) {
+							desktop.push(0)
+						} else {
+							desktop.push(oneDesktopHit)
+						}
+						if (oneMobileHit === undefined) {
+							mobile.push(0)
+						} else {
+							mobile.push(oneMobileHit)
+						}
+						var newDate = start.setDate(start.getDate() + 1);
+						start = new Date(newDate);
+					}
+					document.getElementById('home-view').style.display = 'none';
+					document.getElementById('full-analytics').style.display = 'block';
+					document.getElementById('full-analytics').innerHTML = ""
+					document.getElementById('full-analytics').innerHTML = '<header class="full-analytics-nav"> <div class="branding"> <a href="#" class="nav-link" onclick="closeStats();"> <clr-icon shape="arrow left" class="arrow"></clr-icon> <span class="title">Data for: <span id="shortURLTop"></span></span> </a> </div></header><div class="charts"><div class="row"> <div class="col-xs"> <div class="card"> <div class="card-header"> Long URL </div> <div class="card-block"> <div class="card-text"><span id="chartsViewLongURL"></span></div> </div> </div> </div></div><div class="row"> <div class="col-xs"> <div class="card"> <div class="card-header"> Short URL </div> <div class="card-block"> <div class="card-text"><span id="chartsViewShortURL"></span></div> </div> </div> </div> <div class="col-xs"> <div class="card"> <div class="card-header"> Total Hits </div> <div class="card-block"> <div class="card-text"><span id="chartsViewTotalHits"></span></div> </div> </div> </div> <div class="col-xs"> <div class="card"> <div class="card-header"> Desktop Hits </div> <div class="card-block"> <div class="card-text"><span id="chartsViewDesktopHits"></span></div> </div> </div> </div> <div class="col-xs"> <div class="card"> <div class="card-header"> Mobile Hits </div> <div class="card-block"> <div class="card-text"><span id="chartsViewMobileHits"></span></div> </div> </div> </div></div><p class="chartHeading">Total Hits, Mobile Hits and Desktop Hits:</p><canvas id="allHits"></canvas><p class="chartHeading">All Platforms:</p><canvas id="platform"></canvas><div class="row"> <div class="col-xs"> <p class="chartHeading">Referrer:</p> <canvas id="referrer"></canvas> </div> <div class="col-xs"> <p class="chartHeading">Countries:</p> <canvas id="countries"></canvas> </div></div></div>'
+					document.getElementById('shortURLTop').innerText = shortURL;
+					document.getElementById('chartsViewShortURL').innerHTML = '<a target="_blank" href="../'+ shortURL + '">' + shortURL + '</a>';
+					document.getElementById('chartsViewLongURL').innerHTML = '<a target="_blank" href="'+ longURL + '">' + longURL + '</a>';
+					document.getElementById('chartsViewTotalHits').innerHTML = responses.th;
+					document.getElementById('chartsViewDesktopHits').innerHTML = responses.td;
+					document.getElementById('chartsViewMobileHits').innerHTML = responses.tm;
+					chart();
+				}
+			}
+		};
+		xmlhttp.open("GET", "https://" + config.projectId + ".firebaseio.com/urls/" + shortURL + ".json", true);
+xmlhttp.send();
+}
+
+function closeStats() {
+	document.getElementById('home-view').style.display = 'block'
+	document.getElementById('full-analytics').style.display = 'none'
+}
+
+function chart() {
+	var hitsChart = document.getElementById('allHits').getContext('2d');
+	window.hitsChartItself = new Chart(hitsChart, {
+		type: 'line',
+		data: {
+			labels: labels,
+			datasets: [{
+					label: "All Hits",
+					backgroundColor: 'rgba(255, 99, 132, 0.1)',
+					borderColor: 'rgb(255, 99, 132)',
+					data: hits
+				},
+				{
+					label: "Mobile Hits",
+					backgroundColor: 'rgba(255, 227, 44, 0.1)',
+					borderColor: 'rgb(255, 227, 44)',
+					data: mobile
+				},
+				{
+					label: "Desktop Hits",
+					backgroundColor: 'rgba(42, 245, 152, 0.1)',
+					borderColor: 'rgb(42, 245, 152)',
+					data: desktop
+				}
+			],
+		},
+
+		// Configuration options go here
+		options: {
+			elements: {
+				line: {
+					tension: 0, // disables bezier curves
+				}
+			},
+		    scales: {
+		        yAxes: [{
+		            ticks: {
+		                beginAtZero: true
+		            },
+		            scaleLabel: {
+        				display: true,
+    					labelString: 'Number of Hits'
+    				}
+		        }],
+		        xAxes: [{
+		            ticks: {
+		                beginAtZero: true
+		            },
+		            scaleLabel: {
+        				display: true,
+    					labelString: 'Date (dd-mm-yyyy)'
+    				}
+		        }]
+		    }
+		}
+	});
+	var platformBar = document.getElementById('platform').getContext('2d');
+	window.platformBarItself = new Chart(platformBar, {
+		type: 'bar',
+		data: {
+			labels: platformLabels,
+			datasets: [{
+				label: "Hits on Platform",
+				backgroundColor: ["#ff6384", "#ffe32c", "#2af598", "#6284FF", "#FF0000", "#FFE32C", "#ff6384", "#ffe32c", "#2af598", "#6284FF", "#FF0000", "#FFE32C", "#ff6384", "#ffe32c", "#2af598", "#6284FF", "#FF0000", "#FFE32C", "#ff6384", "#ffe32c", "#2af598", "#6284FF", "#FF0000", "#FFE32C", "#ff6384", "#ffe32c", "#2af598", "#6284FF", "#FF0000", "#FFE32C", "#ff6384", "#ffe32c", "#2af598", "#6284FF", "#FF0000", "#FFE32C", "#ff6384", "#ffe32c", "#2af598", "#6284FF", "#FF0000", "#FFE32C", "#ff6384", "#ffe32c", "#2af598", "#6284FF", "#FF0000", "#FFE32C", "#ff6384", "#ffe32c", "#2af598", "#6284FF", "#FF0000", "#FFE32C", "#ff6384", "#ffe32c", "#2af598", "#6284FF", "#FF0000", "#FFE32C", "#ff6384", "#ffe32c", "#2af598", "#6284FF", "#FF0000", "#FFE32C", "#ff6384", "#ffe32c", "#2af598", "#6284FF", "#FF0000", "#FFE32C", "#ff6384", "#ffe32c", "#2af598", "#6284FF", "#FF0000", "#FFE32C", "#ff6384", "#ffe32c", "#2af598", "#6284FF", "#FF0000", "#FFE32C", "#ff6384", "#ffe32c", "#2af598", "#6284FF", "#FF0000", "#FFE32C", "#ff6384", "#ffe32c", "#2af598", "#6284FF", "#FF0000", "#FFE32C", "#ff6384", "#ffe32c", "#2af598", "#6284FF", "#FF0000", "#FFE32C", "#ff6384", "#ffe32c", "#2af598", "#6284FF", "#FF0000", "#FFE32C", "#ff6384", "#ffe32c", "#2af598", "#6284FF", "#FF0000", "#FFE32C", "#ff6384", "#ffe32c", "#2af598", "#6284FF", "#FF0000", "#FFE32C", "#ff6384", "#ffe32c", "#2af598", "#6284FF", "#FF0000", "#FFE32C", "#ff6384", "#ffe32c", "#2af598", "#6284FF", "#FF0000", "#FFE32C", "#ff6384", "#ffe32c", "#2af598", "#6284FF", "#FF0000", "#FFE32C", "#ff6384", "#ffe32c", "#2af598", "#6284FF", "#FF0000", "#FFE32C", "#ff6384", "#ffe32c", "#2af598", "#6284FF", "#FF0000", "#FFE32C", "#ff6384", "#ffe32c", "#2af598", "#6284FF", "#FF0000", "#FFE32C", "#ff6384", "#ffe32c", "#2af598", "#6284FF", "#FF0000", "#FFE32C"],
+				data: platformNumbers
+			}]
+		},
+		options: {
+			legend: {
+				display: false
+			},
+			scaleLabel: {
+		        yAxes: [{
+		            labelString: 'Number of Hits'
+		        }]
+			},
+		    scales: {
+		        yAxes: [{
+		            ticks: {
+		                beginAtZero: true
+		            },
+		            scaleLabel: {
+        				display: true,
+    					labelString: 'Number of Hits'
+    				}
+		        }],
+		        xAxes: [{
+		            ticks: {
+		                beginAtZero: true
+		            },
+		            scaleLabel: {
+        				display: true,
+    					labelString: 'Type of Device'
+    				}
+		        }]
+		    }
+		}
+	});
+
+	var referrerPie = document.getElementById('referrer').getContext('2d');
+	window.referrerPieItself = new Chart(referrerPie, {
+		type: 'pie',
+		data: {
+			labels: referrerLabels,
+			datasets: [{
+				backgroundColor: ["#ff6384", "#ffe32c", "#2af598", "#6284FF", "#FF0000", "#FAACA8", "#21D4FD", "#B721FF", "#08AEEA", "#2AF598", "#2B86C5", "#F7CE68", "#16A085", "#ff6384", "#ffe32c", "#2af598", "#6284FF", "#FF0000", "#FAACA8", "#21D4FD", "#B721FF", "#08AEEA", "#2AF598", "#2B86C5", "#F7CE68", "#16A085", "#ff6384", "#ffe32c", "#2af598", "#6284FF", "#FF0000", "#FAACA8", "#21D4FD", "#B721FF", "#08AEEA", "#2AF598", "#2B86C5", "#F7CE68", "#16A085", "#ff6384", "#ffe32c", "#2af598", "#6284FF", "#FF0000", "#FAACA8", "#21D4FD", "#B721FF", "#08AEEA", "#2AF598", "#2B86C5", "#F7CE68", "#16A085", "#ff6384", "#ffe32c", "#2af598", "#6284FF", "#FF0000", "#FAACA8", "#21D4FD", "#B721FF", "#08AEEA", "#2AF598", "#2B86C5", "#F7CE68", "#16A085", "#ff6384", "#ffe32c", "#2af598", "#6284FF", "#FF0000", "#FAACA8", "#21D4FD", "#B721FF", "#08AEEA", "#2AF598", "#2B86C5", "#F7CE68", "#16A085", "#ff6384", "#ffe32c", "#2af598", "#6284FF", "#FF0000", "#FAACA8", "#21D4FD", "#B721FF", "#08AEEA", "#2AF598", "#2B86C5", "#F7CE68", "#16A085"],
+				data: referrerNumbers
+			}]
+		}
+		// options: options
+	});
+	
+	var countriesPie = document.getElementById('countries').getContext('2d');
+	window.countriesPieItself = new Chart(countriesPie, {
+		type: 'pie',
+		data: {
+			labels: countryLabels,
+			datasets: [{
+				backgroundColor: ["#ff6384", "#ffe32c", "#2af598", "#6284FF", "#FF0000", "#FAACA8", "#21D4FD", "#B721FF", "#08AEEA", "#2AF598", "#2B86C5", "#F7CE68", "#16A085", "#ff6384", "#ffe32c", "#2af598", "#6284FF", "#FF0000", "#FAACA8", "#21D4FD", "#B721FF", "#08AEEA", "#2AF598", "#2B86C5", "#F7CE68", "#16A085", "#ff6384", "#ffe32c", "#2af598", "#6284FF", "#FF0000", "#FAACA8", "#21D4FD", "#B721FF", "#08AEEA", "#2AF598", "#2B86C5", "#F7CE68", "#16A085", "#ff6384", "#ffe32c", "#2af598", "#6284FF", "#FF0000", "#FAACA8", "#21D4FD", "#B721FF", "#08AEEA", "#2AF598", "#2B86C5", "#F7CE68", "#16A085", "#ff6384", "#ffe32c", "#2af598", "#6284FF", "#FF0000", "#FAACA8", "#21D4FD", "#B721FF", "#08AEEA", "#2AF598", "#2B86C5", "#F7CE68", "#16A085", "#ff6384", "#ffe32c", "#2af598", "#6284FF", "#FF0000", "#FAACA8", "#21D4FD", "#B721FF", "#08AEEA", "#2AF598", "#2B86C5", "#F7CE68", "#16A085", "#ff6384", "#ffe32c", "#2af598", "#6284FF", "#FF0000", "#FAACA8", "#21D4FD", "#B721FF", "#08AEEA", "#2AF598", "#2B86C5", "#F7CE68", "#16A085"],
+				data: countryNumbers
+			}]
+		}
+		// options: options
+	});
+}
+
 var count = 0
 function openDropdown(type) {
 	document.getElementById(type).className += ' open';
 	count += 1;
-	console.log(count % 2)
 	if (count % 2 === 0) {
 		closeDropdown(type)
 	}

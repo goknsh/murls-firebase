@@ -19,6 +19,8 @@
 	<script src="https://unpkg.com/clarity-icons/clarity-icons.min.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.1/angular.min.js"></script>
 	<script src="https://cdn.firebase.com/libs/angularfire/2.3.0/angularfire.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.0/Chart.min.js"></script>
+	<script type="text/javascript" src="https://unpkg.com/moment@2.19.2/moment.js"></script>
 	<script src="js/app.js"></script>
 	<div class="main-container">
 		<header class="header-4 ">
@@ -51,7 +53,8 @@
 		</header>
 		
 		<div class="content-container">
-		    <div class="inner-container">
+		    <div class="inner-container" id="home-view">
+		    	<div>
 				<form onsubmit="addURL();">
 					<h1>Shorten your URL</h1>
 					<div class="row form-group add-url-container">
@@ -85,13 +88,96 @@
 		                    <td class="left url-actions actions-col">
 		                    	<div class="btn-group btn-sm">
 							    	<button onclick="openEditURLModal(this);" shorturl="{{url.$id}}" longurl="{{url.l}}" title="Edit URL" class="btn btn-icon"><clr-icon shape="pencil" size="16"></clr-icon></button>
-								    <button title="View Statistics for URL" class="btn btn-icon"><clr-icon shape="line-chart" size="16"></clr-icon></button>
+								    <button onclick="viewStats(this);" shorturl="{{url.$id}}" longurl="{{url.l}}" title="View Statistics for URL" class="btn btn-icon"><clr-icon shape="line-chart" size="16"></clr-icon></button>
 								    <button onclick="deleteURL(this);" shorturl="{{url.$id}}" title="Delete URL" class="btn btn-icon"><clr-icon shape="trash" size="16"></clr-icon></button>
 								</div>
 		                    </td>
 	                    </tr>
 	                </tbody>
 	            </table>
+	            </div>
+	            </div>
+	            
+	            <div id="full-analytics">
+					<header class="full-analytics-nav">
+					  <div class="branding">
+					    <a href="#" class="nav-link" onclick="closeStats();">
+					      <clr-icon shape="arrow left" class="arrow"></clr-icon>
+					      <span class="title">Data for: <span id="shortURLTop"></span></span>
+					    </a>
+					  </div>
+					</header>
+					<div class="charts">
+						<div class="row">
+						    <div class="col-xs">
+						        <div class="card">
+						            <div class="card-header">
+						                Long URL
+						            </div>
+						            <div class="card-block">
+						                <div class="card-text"><span id="chartsViewLongURL"></span></div>
+						            </div>
+						        </div>
+						    </div>
+						</div>
+						<div class="row">
+						    <div class="col-xs">
+						        <div class="card">
+						            <div class="card-header">
+						                Short URL
+						            </div>
+						            <div class="card-block">
+						                <div class="card-text"><span id="chartsViewShortURL"></span></div>
+						            </div>
+						        </div>
+						    </div>
+						    <div class="col-xs">
+						        <div class="card">
+						            <div class="card-header">
+						                Total Hits
+						            </div>
+						            <div class="card-block">
+						                <div class="card-text"><span id="chartsViewTotalHits"></span></div>
+						            </div>
+						        </div>
+						    </div>
+						    <div class="col-xs">
+						        <div class="card">
+						            <div class="card-header">
+						                Desktop Hits
+						            </div>
+						            <div class="card-block">
+						                <div class="card-text"><span id="chartsViewDesktopHits"></span></div>
+						            </div>
+						        </div>
+						    </div>
+						    <div class="col-xs">
+						        <div class="card">
+						            <div class="card-header">
+						                Mobile Hits
+						            </div>
+						            <div class="card-block">
+						                <div class="card-text"><span id="chartsViewMobileHits"></span></div>
+						            </div>
+						        </div>
+						    </div>
+						</div>
+						<p class="chartHeading">Total Hits, Mobile Hits and Desktop Hits:</p>
+						<canvas id="allHits"></canvas>
+						<p class="chartHeading">All Platforms:</p>
+						<canvas id="platform"></canvas>
+						<div class="row">
+						  <div class="col-xs">
+						    <p class="chartHeading">Referrer:</p>
+						    <canvas id="referrer"></canvas>
+						  </div>
+						  <div class="col-xs">
+						    <p class="chartHeading">Countries:</p>
+						    <canvas id="countries"></canvas>
+						  </div>
+						</div>
+					</div>
+				</div>
 		
 				<div class="footer">
 					<div class="row">
@@ -120,6 +206,28 @@
 					</div>
 					<div class="modal-footer">
 						<button class="btn btn-primary" type="button" onclick="closeModal(this.id)" id="resetPasswordClose">Ok</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="modal-backdrop" aria-hidden="true"></div>
+	</div>
+	
+	<div id="notEnoughData">
+		<div class="modal">
+			<div class="modal-dialog" role="dialog" aria-hidden="true">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button aria-label="Close" onclick="closeModal(this.id)" class="close" type="button" id="notEnoughDataClose">
+							<clr-icon aria-hidden="true" shape="close"></clr-icon>
+						</button>
+						<h3 class="modal-title">Not Enough Data</h3>
+					</div>
+					<div class="modal-body">
+						<p id="resetPasswordText">There isn't enough data to show any kind of chart for this short URL. This means that there is either zero clicks on this short URL or an error has occured somewhere.</p>
+					</div>
+					<div class="modal-footer">
+						<button class="btn btn-primary" type="button" onclick="closeModal(this.id)" id="notEnoughDataClose">Ok</button>
 					</div>
 				</div>
 			</div>

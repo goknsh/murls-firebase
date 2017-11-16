@@ -111,7 +111,7 @@ function hits() {
 function referrer() {
   var ref = document.referrer;
 	if (ref === "") {
-		var u = firebase.database().ref('urls' + currentURL + '/r/u')
+		var u = firebase.database().ref('urls' + currentURL + '/r/VW5rbm93bg==')
 		u.transaction(function (u) {
 			return (u || 0) + 1;
         });
