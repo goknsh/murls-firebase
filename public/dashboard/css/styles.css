@@ -31,7 +31,7 @@ body {
 	margin-top: 0.5rem;
 }
 
-#resetPassword, #editURL, #error, #notEnoughData {
+#resetPassword, #editURL, #error, #notEnoughData, #updates {
 	display: none;
 }
 
@@ -135,12 +135,9 @@ form .form-group {
 	margin: 24px 0 30px 0;
 }
 
-.footer {
-	margin: 1rem 0;
+.footer-inner {
+	margin: 1rem 0 0.5rem 0;
 	text-align: center;
-}
-
-.footer .row {
 	height: 100%;
 	align-items: flex-end;
 }

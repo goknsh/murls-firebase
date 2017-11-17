@@ -5,6 +5,23 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<link rel="apple-touch-icon" sizes="57x57" href="/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192"  href="/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/ms-icon-144x144.png">
+    <meta name="theme-color" content="#006a91">
 
 	<link rel="stylesheet" href="https://unpkg.com/clarity-ui/clarity-ui.min.css" type="text/css" />
 	<link rel="stylesheet" href="https://unpkg.com/clarity-icons/clarity-icons.min.css" type="text/css" />
@@ -27,7 +44,7 @@
 		<header class="header-4 ">
 			<div class="branding">
 				<a href="#" class="nav-link">
-					<clr-icon shape="vm-bug"></clr-icon>
+					<clr-icon shape="murls-logo"></clr-icon>
 					<span class="title">murls/firebase</span>
 				</a>
 			</div>
@@ -46,7 +63,7 @@
 						<h4 class="dropdown-header">Miscellaneous</h4>
 						<a href="https://github.com/murls/firebase" class="dropdown-item">murls/firebase on GitHub</a>
 						<a href="https://murls.ga" class="dropdown-item">Murls Website</a>
-						<button type="button" class="dropdown-item">Check for Updates</button>
+						<button type="button" onclick="checkForUpdates();" class="dropdown-item">Check for Updates</button>
 						<h4 id="userEmail" class="dropdown-header">Email</h4>
 					</div>
 				</div>
@@ -181,11 +198,11 @@
 				</div>
 		
 				<div class="footer">
-					<div class="row">
-						<div class="col-xs">&copy; Murls OSS</div>
-						<div class="col-xs"><a onclick="introJs().start();" style="cursor:pointer;">Get a Tour</a></div>
-						<div class="col-xs">Current Version: v1.0.0-beta</div>
-						<div class="col-xs"><a href="https://github.com/murls/firebase" target="_blank">GitHub</a></div>
+					<div class="footer-inner row">
+						<div class="col-xs"><a href="https://murls.ga/" target="_blank"><button class="btn btn-link">Made with Murls</button></a></div>
+						<div class="col-xs"><button class="btn btn-link" onclick="introJs().start();" id="get-a-tour" title="Get a Tour of the Dashboard and see how things work">Get a Tour</button></div>
+						<div class="col-xs"><button onclick="checkForUpdates();" class="btn btn-link" title="Click to check for updates">Current Version: v1.0.0-beta</button></div>
+						<div class="col-xs"><a href="https://github.com/murls/firebase" target="_blank"><button class="btn btn-link">GitHub</button></a></div>
 					</div>
 				</div>
             </div>
@@ -290,6 +307,28 @@
 					</div>
 					<div class="modal-footer">
 						<button class="btn btn-primary" type="button" onclick="closeModal(this.id)" id="errorClose">Ok</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="modal-backdrop" aria-hidden="true"></div>
+	</div>
+	
+	<div id="updates">
+		<div class="modal">
+			<div class="modal-dialog" role="dialog" aria-hidden="true">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button aria-label="Close" onclick="closeModal(this.id)" class="close" type="button" id="updatesClose">
+							<clr-icon aria-hidden="true" shape="close"></clr-icon>
+						</button>
+						<h3 class="modal-title">Check for Updates</h3>
+					</div>
+					<div class="modal-body">
+						<p id="updatesText"></p>
+					</div>
+					<div class="modal-footer">
+						<a id="updatesLink" href="#"><button class="btn btn-primary updatesButton" type="button" onclick="closeModal(this.id)" id="updatesClose">Ok</button></a>
 					</div>
 				</div>
 			</div>
