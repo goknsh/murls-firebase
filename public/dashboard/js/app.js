@@ -336,6 +336,7 @@ function closeStats() {
 }
 
 function chart() {
+	Chart.defaults.global.defaultFontFamily = "Metropolis"
 	var hitsChart = document.getElementById('allHits').getContext('2d');
 	window.hitsChartItself = new Chart(hitsChart, {
 		type: 'line',
@@ -385,7 +386,7 @@ function chart() {
 		            },
 		            scaleLabel: {
         				display: true,
-    					labelString: 'Date (dd-mm-yyyy)'
+    					labelString: 'Date in UTC (dd-mm-yyyy)'
     				}
 		        }]
 		    }

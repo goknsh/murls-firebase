@@ -8,6 +8,7 @@
 
 	<link rel="stylesheet" href="https://unpkg.com/clarity-ui/clarity-ui.min.css" type="text/css" />
 	<link rel="stylesheet" href="https://unpkg.com/clarity-icons/clarity-icons.min.css" type="text/css" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intro.js/2.7.0/introjs.min.css" type="text/css" />
 	<link rel="stylesheet" href="css/styles.css" type="text/css">
 
 	<title>Dashboard | murls/firebase</title>
@@ -20,7 +21,7 @@
 	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.1/angular.min.js"></script>
 	<script src="https://cdn.firebase.com/libs/angularfire/2.3.0/angularfire.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.0/Chart.min.js"></script>
-	<script type="text/javascript" src="https://unpkg.com/moment@2.19.2/moment.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/intro.js/2.7.0/intro.min.js"></script>
 	<script src="js/app.js"></script>
 	<div class="main-container">
 		<header class="header-4 ">
@@ -55,23 +56,23 @@
 		<div class="content-container">
 		    <div class="inner-container" id="home-view">
 		    	<div>
-				<form onsubmit="addURL();">
+				<form onsubmit="addURL();" data-intro="You can add Short URLs here">
 					<h1>Shorten your URL</h1>
 					<div class="row form-group add-url-container">
-			            <div class="col-xs-6"><input id="add-long-url" required spellcheck="false" class="full-width" type="url" placeholder="Long URL"></div>
-			            <div class="col-xs-4"><input id="add-short-url" spellcheck="false" class="full-width" type="text" placeholder="Short URL (leave empty to randomize)"></div>
+			            <div class="col-xs-6" data-intro="Add the Long URL to shorten here. It must be an URL..."><input id="add-long-url" required spellcheck="false" class="full-width" type="url" placeholder="Long URL"></div>
+			            <div class="col-xs-4" data-intro="Type a string to be a Short URL. It cannot contain the following: '/' or '.' or '#' or '$' '[' or ']'. If left empty, a random 5 character string will be generated as a short URL. Please note that the short URL is case sensitive."><input id="add-short-url" spellcheck="false" class="full-width" type="text" placeholder="Short URL (leave empty to randomize)"></div>
 			            <div class="col-xs-2"><button class="btn btn-link" type="submit">Shorten URL</button></div>
 			        </div>
 				</form>
 				
-				<table class="table">
+				<table class="table" data-intro="Here, you can view realtime analytics on your short URL">
 					<h3>Quick Analytics</h3>
 	                <thead>
 	                    <tr>
 	                        <th class="left short-url-col">Short URL</th>
 	                        <th class="left long-url-col">Long URL</th>
 	                        <th class="left all-clicks-col">All Clicks</th>
-	                        <th class="left actions-col">Actions</th>
+	                        <th class="left actions-col" data-intro="The icons in this column allow you to edit, view detailed analytics and delete the Short URL respectively. Please note that the data in the detailed analytics view is not realtime.">Actions</th>
 	                    </tr>
 	                </thead>
 	                <tbody>
@@ -182,8 +183,8 @@
 				<div class="footer">
 					<div class="row">
 						<div class="col-xs">&copy; Murls OSS</div>
-						<div class="col-xs">Get a Tour</div>
-						<div class="col-xs">Current Version: v0.5.0</div>
+						<div class="col-xs"><a onclick="introJs().start();" style="cursor:pointer;">Get a Tour</a></div>
+						<div class="col-xs">Current Version: v1.0.0-beta</div>
 						<div class="col-xs"><a href="https://github.com/murls/firebase" target="_blank">GitHub</a></div>
 					</div>
 				</div>
