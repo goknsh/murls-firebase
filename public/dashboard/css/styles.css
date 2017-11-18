@@ -31,7 +31,7 @@ body {
 	margin-top: 0.5rem;
 }
 
-#resetPassword, #editURL, #error, #notEnoughData, #updates, #linkcopysuccess, #linkcopynotsuccess {
+#resetPassword, #editURL, #error, #notEnoughData, #updates {
 	display: none;
 }
 
@@ -78,8 +78,7 @@ form .form-group {
 }
 
 .long-url-col {
-	/*width: 45%;*/
-	width: auto;
+	width: 45%;
 }
 
 .all-clicks-col {
@@ -128,6 +127,14 @@ form .form-group {
 
 .inner-container {
 	display: static;
+}
+
+#linkcopy:hover {
+	transform: scale(1.1);
+}
+
+#linkcopy:active {
+	transform: scale(.90);
 }
 
 .chartHeading {

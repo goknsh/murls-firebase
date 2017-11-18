@@ -101,8 +101,16 @@
 							</td>
 						</tr>
 	                    <tr class="url-row" ng-repeat="url in urls">
-	                    	<td title="Short URL" class="left short-url-col"><a ng-href="#{{url.$id}}">{{url.$id}}</a>&nbsp;<clr-icon class="btn-link linkcopy" shape="copy" data-clipboard-text="{{url.$id}}"></clr-icon>&nbsp;<clr-icon class="btn-link is-success" id="linkcopysuccess" shape="check" data-clipboard-text="{{url.l}}"></clr-icon>&nbsp;<clr-icon class="btn-link is-danger" id="linkcopynotsuccess" shape="times" data-clipboard-text="{{url.l}}"></clr-icon></td>
-		                    <td title="Long URL" class="left long-url-col"><a ng-href="{{url.l}}" target="_blank">{{url.l}}</a>&nbsp;<clr-icon class="btn-link linkcopy" shape="copy" data-clipboard-text="{{url.l}}"></clr-icon>&nbsp;<clr-icon class="btn-link is-success" id="linkcopysuccess" shape="check" data-clipboard-text="{{url.l}}"></clr-icon>&nbsp;<clr-icon class="btn-link is-danger" id="linkcopynotsuccess" shape="times" data-clipboard-text="{{url.l}}"></clr-icon></td>
+	                    	<td title="Short URL" class="left short-url-col">
+	                    		<a ng-href="#{{url.$id}}">{{url.$id}}</a>&nbsp;
+	                    		<clr-icon title="Copy Short URL" id="linkcopy" shape="copy" data-clipboard-text="{{url.$id}}"></clr-icon>
+	                    	</td>
+	                    	
+		                    <td title="Long URL" class="left long-url-col">
+		                    	<a ng-href="{{url.l}}" target="_blank">{{url.l}}</a>&nbsp;
+		                    	<clr-icon title="Copy Long URL" id="linkcopy" shape="copy" data-clipboard-text="{{url.l}}"></clr-icon>
+		                    </td>
+		                    
 		                    <td title="Total Clicks Recorded" class="left all-clicks-col">{{url.th}}</td>
 		                    <td class="left url-actions actions-col">
 		                    	<div class="btn-group btn-sm">
