@@ -31,7 +31,7 @@ body {
 	margin-top: 0.5rem;
 }
 
-#resetPassword, #editURL, #error, #notEnoughData, #updates {
+#resetPassword, #editURL, #error, #notEnoughData, #updates, #linkcopysuccess, #linkcopynotsuccess {
 	display: none;
 }
 
@@ -78,7 +78,8 @@ form .form-group {
 }
 
 .long-url-col {
-	width: 45%;
+	/*width: 45%;*/
+	width: auto;
 }
 
 .all-clicks-col {

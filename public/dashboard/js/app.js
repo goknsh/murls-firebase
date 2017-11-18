@@ -46,6 +46,22 @@ function logIn() {
 	});
 }
 
+var clipboard = new Clipboard('.linkcopy');
+
+clipboard.on('success', function(e) {
+	console.log(e)
+	console.log(e.target.classList)
+	var number = document.getElementsByClassName("linkcopy").indexOf(e.target);
+	console.log("number: " + number);
+    document.getElementById('linkcopysuccess').style.display = 'inline-block';
+    setTimeout(function(){ document.getElementById('linkcopysuccess').style.display = 'none'; }, 3000);
+});
+
+clipboard.on('error', function(e) {
+    document.getElementById('linkcopynotsuccess').style.display = 'inline-block';
+    setTimeout(function(){ document.getElementById('linkcopynotsuccess').style.display = 'none'; }, 3000);
+});
+
 function logOut() {
 	firebase.auth().signOut();
 	authState();
@@ -87,7 +103,7 @@ function editURL() {
 	if (editURLNewShortURL === "" || shortURLhasSlash === true || shortURLhasDot === true || shortURLhasHash === true || shortURLhasDollar === true || shortURLhasLeftBrace === true || shortURLhasRightBrace === true) {
 		document.getElementById('editURL-error').style.display = 'block';
 		document.getElementById('editURL-error-text').innerText = "Short URLs cannot contain '/' or '.' or '#' or '$' '[' or ']' or be empty. Please fix that and click \"Confirm Edits\" again";
-		die();
+		// die();
 	}
 	else {
 		var db = firebase.database().ref("urls/" + editURLNewShortURL);
@@ -101,24 +117,28 @@ function editURL() {
 						l: editURLLongURL
 					});
 				document.getElementById('editURL').style.display = 'none';
-				die();
+				// die();
 			}
 			if (present === true) {
 				document.getElementById('editURL-error').style.display = 'block';
 				document.getElementById('editURL-error-text').innerText = 'The Short URL ' + editURLNewShortURL + ' already exists, please fix and click "Confirm Edits" again';
-				die();
+				// die();
 			}
 			else {
+				console.log('ran else')
 				document.getElementById('editURL-error').style.display = 'none';
 				document.getElementById('editURL-error-text').innerText = '';
 				var db = firebase.database().ref("urls");
 				var child = db.child(editURLOldShortURL);
+				  db.child(editURLOldShortURL).update({
+				  	l: editURLLongURL
+				  });
 				child.once('value', function(snapshot) {
 				  db.child(editURLNewShortURL).set(snapshot.val());
 				  child.remove();
 				});
 				document.getElementById('editURL').style.display = 'none';
-				die();
+				// die();
 			}
 		});
 	}
