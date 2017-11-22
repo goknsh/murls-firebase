@@ -68,6 +68,7 @@ function resetPassword() {
 }
 
 function openEditURLModal(urlData) {
+	closeModal('minimizedURLactions')
 	var editURLOldShortURL = urlData.attributes.shorturl.value;
 	var editURLLongURL = urlData.attributes.longurl.value;
 	openModal('editURL')
@@ -130,6 +131,7 @@ function editURL() {
 }
 
 function deleteURL(urlData) {
+	closeModal('minimizedURLactions')
 	var shortURL = urlData.attributes.shorturl.value;
 	var urlInDB = firebase.database().ref("urls/" + shortURL);
 	urlInDB.remove().catch(function (error) {
@@ -212,6 +214,8 @@ function addURL() {
 }
 
 function viewStats(urlData) {
+	closeModal('minimizedURLactions')
+	document.getElementById('full-page-loader').style.display = 'flex'
 	var shortURL = urlData.attributes.shorturl.value;
 	var longURL = urlData.attributes.longurl.value;
 	var xmlhttp = new XMLHttpRequest();
@@ -467,6 +471,19 @@ function chart() {
 		}
 		// options: options
 	});
+	document.getElementById('full-page-loader').style.display = 'none'
+}
+
+function expand(urlData) {
+	openModal('minimizedURLactions');
+	var editURLOldShortURL = urlData.attributes.shorturl.value;
+	var editURLLongURL = urlData.attributes.longurl.value;
+	document.getElementById('minimizedURLactionsEditURL').setAttribute("shorturl", editURLOldShortURL);
+	document.getElementById('minimizedURLactionsEditURL').setAttribute("longurl", editURLLongURL);
+	document.getElementById('minimizedURLactionsViewStats').setAttribute("shorturl", editURLOldShortURL);
+	document.getElementById('minimizedURLactionsViewStats').setAttribute("longurl", editURLLongURL);
+	document.getElementById('minimizedURLactionsDeleteURL').setAttribute("shorturl", editURLOldShortURL);
+	document.getElementById('minimizedURLactionsDeleteURL').setAttribute("longurl", editURLLongURL);
 }
 
 function checkForUpdates() {

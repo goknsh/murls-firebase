@@ -41,6 +41,11 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/intro.js/2.7.0/intro.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/clipboard@1/dist/clipboard.min.js"></script>
 	<script src="js/app.js"></script>
+	
+	<div id="full-page-loader">
+		<span class="spinner"></span>
+	</div>
+	
 	<div class="main-container">
 		<header class="header-4 ">
 			<div class="branding">
@@ -76,7 +81,7 @@
 		    	<div>
 				<form onsubmit="addURL();" data-intro="You can add Short URLs here">
 					<h1>Shorten your URL</h1>
-					<div class="row form-group add-url-container">
+					<div class="row add-url-container">
 			            <div class="col-xs-6" data-intro="Add the Long URL to shorten here. It must be an URL..."><input id="add-long-url" required spellcheck="false" class="full-width" type="url" placeholder="Long URL"></div>
 			            <div class="col-xs-4" data-intro="Type a string to be a Short URL. It cannot contain the following: '/' or '.' or '#' or '$' '[' or ']'. If left empty, a random 5 character string will be generated as a short URL. Please note that the short URL is case sensitive."><input id="add-short-url" spellcheck="false" class="full-width" type="text" placeholder="Short URL (leave empty to randomize)"></div>
 			            <div class="col-xs-2"><button class="btn btn-link" type="submit">Shorten URL</button></div>
@@ -102,21 +107,24 @@
 						</tr>
 	                    <tr class="url-row" ng-repeat="url in urls">
 	                    	<td title="Short URL" class="left short-url-col">
-	                    		<a ng-href="#{{url.$id}}">{{url.$id}}</a>&nbsp;
+	                    		<a ng-href="#{{url.$id}}">{{url.$id}}</a>&nbsp;<br>
 	                    		<clr-icon title="Copy Short URL" id="linkcopy" shape="copy" data-clipboard-text="{{url.$id}}"></clr-icon>
 	                    	</td>
 	                    	
 		                    <td title="Long URL" class="left long-url-col">
-		                    	<a ng-href="{{url.l}}" target="_blank">{{url.l}}</a>&nbsp;
+		                    	<a ng-href="{{url.l}}" target="_blank">{{url.l}}</a>&nbsp;<br>
 		                    	<clr-icon title="Copy Long URL" id="linkcopy" shape="copy" data-clipboard-text="{{url.l}}"></clr-icon>
 		                    </td>
 		                    
 		                    <td title="Total Clicks Recorded" class="left all-clicks-col">{{url.th}}</td>
-		                    <td class="left url-actions actions-col">
-		                    	<div class="btn-group btn-sm">
+		                    <td class="left url-actions actions-col" id="{{url.$id}}">
+		                    	<div class="btn-group btn-sm expanded">
 							    	<button onclick="openEditURLModal(this);" shorturl="{{url.$id}}" longurl="{{url.l}}" title="Edit URL" class="btn btn-icon"><clr-icon shape="pencil" size="16"></clr-icon></button>
 								    <button onclick="viewStats(this);" shorturl="{{url.$id}}" longurl="{{url.l}}" title="View Statistics for URL" class="btn btn-icon"><clr-icon shape="line-chart" size="16"></clr-icon></button>
 								    <button onclick="deleteURL(this);" shorturl="{{url.$id}}" title="Delete URL" class="btn btn-icon"><clr-icon shape="trash" size="16"></clr-icon></button>
+								</div>
+								<div class="minimized">
+									<clr-icon shape="ellipsis-vertical" onclick="expand(this);" shorturl="{{url.$id}}" longurl="{{url.l}}"></clr-icon>
 								</div>
 		                    </td>
 	                    </tr>
@@ -233,6 +241,30 @@
 					</div>
 					<div class="modal-footer">
 						<button class="btn btn-primary" type="button" onclick="closeModal(this.id)" id="resetPasswordClose">Ok</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="modal-backdrop" aria-hidden="true"></div>
+	</div>
+	
+	<div id="minimizedURLactions">
+		<div class="modal">
+			<div class="modal-dialog" role="dialog" aria-hidden="true">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button aria-label="Close" onclick="closeModal(this.id)" class="close" type="button" id="minimizedURLactionsClose">
+							<clr-icon aria-hidden="true" shape="close"></clr-icon>
+						</button>
+						<h3 class="modal-title">URL Actions</h3>
+					</div>
+					<div class="modal-body">
+						<p>Click the appropriate button to Edit URL, View Statistics or Delete the URL</p>
+					</div>
+					<div class="modal-footer">
+						<button onclick="openEditURLModal(this);" class="btn btn-primary" id="minimizedURLactionsEditURL">Edit URL</button>
+					    <button onclick="viewStats(this);" class="btn btn-primary" id="minimizedURLactionsViewStats">View Statistics</button>
+					    <button onclick="deleteURL(this);" class="btn btn-primary" id="minimizedURLactionsDeleteURL">Delete URL</button>
 					</div>
 				</div>
 			</div>
