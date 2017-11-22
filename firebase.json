@@ -7,9 +7,7 @@
     "ignore": [
       "firebase.json",
       "**/.*",
-      "**/node_modules/**",
-      "README.md",
-      "db-start.json"
+      "**/node_modules/**"
     ],
     "rewrites": [
       {

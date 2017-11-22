@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="urlEditor">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<link rel="apple-touch-icon" sizes="57x57" href="/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192"  href="/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/ms-icon-144x144.png">
+    <meta name="theme-color" content="#006a91">
+
+	<link rel="stylesheet" href="https://unpkg.com/clarity-ui/clarity-ui.min.css" type="text/css" />
+	<link rel="stylesheet" href="https://unpkg.com/clarity-icons/clarity-icons.min.css" type="text/css" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intro.js/2.7.0/introjs.min.css" type="text/css" />
+	<link rel="stylesheet" href="css/styles.css" type="text/css">
+
+	<title>Dashboard | murls/firebase</title>
+</head>
+
+<body ng-controller="urlCtrl">
+	<script src="https://www.gstatic.com/firebasejs/4.6.0/firebase.js"></script>
+	<script src="https://unpkg.com/@webcomponents/custom-elements/custom-elements.min.js"></script>
+	<script src="https://unpkg.com/clarity-icons/clarity-icons.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.1/angular.min.js"></script>
+	<script src="https://cdn.firebase.com/libs/angularfire/2.3.0/angularfire.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.0/Chart.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/intro.js/2.7.0/intro.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/clipboard@1/dist/clipboard.min.js"></script>
+	<script src="js/app.js"></script>
+	
+	<div id="full-page-loader">
+		<span class="spinner"></span>
+	</div>
+	
+	<div class="main-container">
+		<header class="header-4 ">
+			<div class="branding">
+				<a href="#" class="nav-link">
+					<clr-icon shape="murls-logo"></clr-icon>
+					<span class="title">murls/firebase</span>
+				</a>
+			</div>
+			<div class="header-actions">
+				<div class="dropdown bottom-right" id="accountSettings">
+					<button type="button" class="dropdown-toggle nav-icon" onclick="openDropdown('accountSettings');">
+						<clr-icon shape="user"></clr-icon>
+						<clr-icon shape="caret down"></clr-icon>
+					</button>
+					<div class="dropdown-menu">
+						<h4 class="dropdown-header">Account Actions</h4>
+						<button type="button" class="dropdown-item" onclick="resetPassword();">Reset Password</button>
+						<button type="button" class="dropdown-item" onclick="logOut();">Log Out</button>
+						<button type="button" class="dropdown-item" onclick="addUsers();">Add Users</button>
+						<div class="dropdown-divider"></div>
+						<h4 class="dropdown-header">Miscellaneous</h4>
+						<a href="https://github.com/murls/firebase" class="dropdown-item">murls/firebase on GitHub</a>
+						<a href="https://murls.ga" class="dropdown-item">Murls Website</a>
+						<button type="button" onclick="checkForUpdates();" class="dropdown-item">Check for Updates</button>
+						<h4 id="userEmail" class="dropdown-header">Email</h4>
+					</div>
+				</div>
+			</div>
+		</header>
+		
+		<div class="content-container">
+		    <div class="inner-container" id="home-view">
+		    	<div class="home-view-inner">
+				<form onsubmit="addURL();" data-intro="You can add Short URLs here">
+					<h1>Shorten your URL</h1>
+					<div class="row add-url-container">
+			            <div class="col-xs-6" data-intro="Add the Long URL to shorten here. It must be an URL..."><input id="add-long-url" required spellcheck="false" class="full-width" type="url" placeholder="Long URL"></div>
+			            <div class="col-xs-4" data-intro="Type a string to be a Short URL. It cannot contain the following: '/' or '.' or '#' or '$' '[' or ']'. If left empty, a random 5 character string will be generated as a short URL. Please note that the short URL is case sensitive."><input id="add-short-url" spellcheck="false" class="full-width" type="text" placeholder="Short URL (leave empty to randomize)"></div>
+			            <div class="col-xs-2"><button class="btn btn-link" type="submit">Shorten URL</button></div>
+			        </div>
+				</form>
+				
+				<table class="table" data-intro="Here, you can view realtime analytics on your short URL">
+					<h3>Quick Analytics</h3>
+	                <thead>
+	                    <tr>
+	                        <th class="left short-url-col">Short URL</th>
+	                        <th class="left long-url-col">Long URL</th>
+	                        <th class="left all-clicks-col">All Clicks</th>
+	                        <th class="left actions-col" data-intro="The icons in this column allow you to edit, view detailed analytics and delete the Short URL respectively. Please note that the data in the detailed analytics view is not realtime.">Actions</th>
+	                    </tr>
+	                </thead>
+	                <tbody>
+	                	<tr id="inlineTableLoader">
+	                		<td colspan="4">
+	                			<span class="spinner spinner-inline">Loading...</span>
+								<span>Loading...</span>
+							</td>
+						</tr>
+	                    <tr class="url-row" ng-repeat="url in urls">
+	                    	<td title="Short URL" class="left short-url-col">
+	                    		<a>{{url.$id}}</a>&nbsp;<br>
+	                    		<div class="linkcopyouter"><clr-icon title="Copy Short URL" id="linkcopy" shape="copy" data-clipboard-text="{{url.$id}}"></clr-icon></div>
+	                    	</td>
+	                    	
+		                    <td title="Long URL" class="left long-url-col">
+		                    	<a ng-href="{{url.l}}" target="_blank">{{url.l}}</a>&nbsp;<br>
+		                    	<div class="linkcopyouter"><clr-icon title="Copy Long URL" id="linkcopy" shape="copy" data-clipboard-text="{{url.l}}"></clr-icon></div>
+		                    </td>
+		                    
+		                    <td title="Total Clicks Recorded" class="left all-clicks-col">{{url.th}}</td>
+		                    <td class="left url-actions actions-col" id="{{url.$id}}">
+		                    	<div class="btn-group btn-sm expanded">
+							    	<button onclick="openEditURLModal(this);" shorturl="{{url.$id}}" longurl="{{url.l}}" title="Edit URL" class="btn btn-icon"><clr-icon shape="pencil" size="16"></clr-icon></button>
+								    <button onclick="viewStats(this);" shorturl="{{url.$id}}" longurl="{{url.l}}" title="View Statistics for URL" class="btn btn-icon"><clr-icon shape="line-chart" size="16"></clr-icon></button>
+								    <button onclick="deleteURL(this);" shorturl="{{url.$id}}" title="Delete URL" class="btn btn-icon"><clr-icon shape="trash" size="16"></clr-icon></button>
+								</div>
+								<div class="minimized">
+									<clr-icon shape="ellipsis-vertical" onclick="expand(this);" shorturl="{{url.$id}}" longurl="{{url.l}}"></clr-icon>
+								</div>
+		                    </td>
+	                    </tr>
+	                </tbody>
+	            </table>
+	            </div>
+	            </div>
+	            
+	            <div id="full-analytics">
+					<header class="full-analytics-nav">
+					  <div class="branding">
+					    <a href="#" class="nav-link" onclick="closeStats();">
+					      <clr-icon shape="arrow left" class="arrow"></clr-icon>
+					      <span class="title">Data for: <span id="shortURLTop"></span></span>
+					    </a>
+					  </div>
+					</header>
+					<div class="charts">
+						<div class="row">
+						    <div class="col-xs">
+						        <div class="card">
+						            <div class="card-header">
+						                Long URL
+						            </div>
+						            <div class="card-block">
+						                <div class="card-text"><span id="chartsViewLongURL"></span></div>
+						            </div>
+						        </div>
+						    </div>
+						</div>
+						<div class="row">
+						    <div class="col-xs">
+						        <div class="card">
+						            <div class="card-header">
+						                Total Hits
+						            </div>
+						            <div class="card-block">
+						                <div class="card-text"><span id="chartsViewTotalHits"></span></div>
+						            </div>
+						        </div>
+						    </div>
+						    <div class="col-xs">
+						        <div class="card">
+						            <div class="card-header">
+						                Desktop Hits
+						            </div>
+						            <div class="card-block">
+						                <div class="card-text"><span id="chartsViewDesktopHits"></span></div>
+						            </div>
+						        </div>
+						    </div>
+						    <div class="col-xs">
+						        <div class="card">
+						            <div class="card-header">
+						                Mobile Hits
+						            </div>
+						            <div class="card-block">
+						                <div class="card-text"><span id="chartsViewMobileHits"></span></div>
+						            </div>
+						        </div>
+						    </div>
+						    <div class="col-xs">
+						        <div class="card">
+						            <div class="card-header">
+						                Short URL
+						            </div>
+						            <div class="card-block">
+						                <div class="card-text"><span id="chartsViewShortURL"></span></div>
+						            </div>
+						        </div>
+						    </div>
+						</div>
+						<p class="chartHeading">Total Hits, Mobile Hits and Desktop Hits:</p>
+						<canvas id="allHits"></canvas>
+						<p class="chartHeading">All Platforms:</p>
+						<canvas id="platform"></canvas>
+						<div class="row">
+						  <div class="col-xs">
+						    <p class="chartHeading">Referrer:</p>
+						    <canvas id="referrer"></canvas>
+						  </div>
+						  <div class="col-xs">
+						    <p class="chartHeading">Countries:</p>
+						    <canvas id="countries"></canvas>
+						  </div>
+						</div>
+					</div>
+				</div>
+		
+				<div class="footer">
+					<div class="footer-inner row">
+						<div class="col-xs"><a href="https://murls.ga/" target="_blank"><button class="btn btn-link">Made with Murls</button></a></div>
+						<div class="col-xs"><button class="btn btn-link" onclick="introJs().start();" id="get-a-tour" title="Get a Tour of the Dashboard and see how things work">Get a Tour</button></div>
+						<div class="col-xs"><button onclick="checkForUpdates();" class="btn btn-link" title="Click to check for updates">Current Version: v1.0.0-beta</button></div>
+						<div class="col-xs"><a href="https://github.com/murls/firebase" target="_blank"><button class="btn btn-link">GitHub</button></a></div>
+					</div>
+				</div>
+            </div>
+		</div>
+	</div>
+
+	<div id="resetPassword">
+		<div class="modal">
+			<div class="modal-dialog" role="dialog" aria-hidden="true">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button aria-label="Close" onclick="closeModal(this.id)" class="close" type="button" id="resetPasswordClose">
+							<clr-icon aria-hidden="true" shape="close"></clr-icon>
+						</button>
+						<h3 class="modal-title">Reset Password</h3>
+					</div>
+					<div class="modal-body">
+						<p id="resetPasswordText"></p>
+					</div>
+					<div class="modal-footer">
+						<button class="btn btn-primary" type="button" onclick="closeModal(this.id)" id="resetPasswordClose">Ok</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="modal-backdrop" aria-hidden="true"></div>
+	</div>
+	
+	<div id="minimizedURLactions">
+		<div class="modal">
+			<div class="modal-dialog" role="dialog" aria-hidden="true">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button aria-label="Close" onclick="closeModal(this.id)" class="close" type="button" id="minimizedURLactionsClose">
+							<clr-icon aria-hidden="true" shape="close"></clr-icon>
+						</button>
+						<h3 class="modal-title">URL Actions</h3>
+					</div>
+					<div class="modal-body">
+						<p>Click the appropriate button to Edit URL, View Statistics or Delete the URL</p>
+					</div>
+					<div class="modal-footer">
+						<button onclick="openEditURLModal(this);" class="btn btn-primary" id="minimizedURLactionsEditURL">Edit URL</button>
+					    <button onclick="viewStats(this);" class="btn btn-primary" id="minimizedURLactionsViewStats">View Statistics</button>
+					    <button onclick="deleteURL(this);" class="btn btn-primary" id="minimizedURLactionsDeleteURL">Delete URL</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="modal-backdrop" aria-hidden="true"></div>
+	</div>
+	
+	<div id="notEnoughData">
+		<div class="modal">
+			<div class="modal-dialog" role="dialog" aria-hidden="true">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button aria-label="Close" onclick="closeModal(this.id)" class="close" type="button" id="notEnoughDataClose">
+							<clr-icon aria-hidden="true" shape="close"></clr-icon>
+						</button>
+						<h3 class="modal-title">Not Enough Data</h3>
+					</div>
+					<div class="modal-body">
+						<p id="resetPasswordText">There isn't enough data to show any kind of chart for this short URL. This means that there is either zero clicks on this short URL or an error has occured somewhere.</p>
+					</div>
+					<div class="modal-footer">
+						<button class="btn btn-primary" type="button" onclick="closeModal(this.id)" id="notEnoughDataClose">Ok</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="modal-backdrop" aria-hidden="true"></div>
+	</div>
+	
+	<div id="editURL">
+		<div class="modal">
+			<div class="modal-dialog" role="dialog" aria-hidden="true">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button aria-label="Close" onclick="closeModal(this.id)" class="close" type="button" id="editURLClose">
+							<clr-icon aria-hidden="true" shape="close"></clr-icon>
+						</button>
+						<h3 class="modal-title">Edit URL</h3>
+					</div>
+					<div class="modal-body">
+						<div class="alert alert-danger" id="editURL-error">
+						    <div class="alert-items">
+						        <div class="alert-item static">
+						            <div class="alert-icon-wrapper">
+						                <clr-icon class="alert-icon" shape="exclamation-circle"></clr-icon>
+						            </div>
+						            <span id="editURL-error-text" class="alert-text"></span>
+						        </div>
+						    </div>
+						</div>
+						<p class="no-margin">You can change the Current Short URL and the Long URL. Click 'Confirm Edits' when you are done. All the stats will remain.</p><br>
+						<form>
+						<div class="row form-group">
+			            	<div class="col-xs"><input required readonly spellcheck="false" class="full-width" type="text" placeholder="Current Short URL" id="editing-current-short-url"></div><clr-icon shape="arrow right" size="26"></clr-icon>
+			            	<div class="col-xs"><input required spellcheck="false" class="full-width" type="text" placeholder="New Short URL" id="editing-new-short-url"></div>
+			        	</div><br>
+			            	<input required spellcheck="false" class="full-width" type="url" placeholder="Long URL" id="editing-long-url">
+					</div>
+					<div class="modal-footer">
+						<button class="btn btn-primary" type="submit" onclick="editURL();" id="editURLClose">Confirm Edits</button>
+					</div>
+					</form>
+				</div>
+			</div>
+		</div>
+		<div class="modal-backdrop" aria-hidden="true"></div>
+	</div>
+	
+	<div id="error">
+		<div class="modal">
+			<div class="modal-dialog" role="dialog" aria-hidden="true">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button aria-label="Close" onclick="closeModal(this.id)" class="close" type="button" id="errorClose">
+							<clr-icon aria-hidden="true" shape="close"></clr-icon>
+						</button>
+						<h3 class="modal-title">An Error Occured</h3>
+					</div>
+					<div class="modal-body">
+						<p id="errorText"></p>
+					</div>
+					<div class="modal-footer">
+						<button class="btn btn-primary" type="button" onclick="closeModal(this.id)" id="errorClose">Ok</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="modal-backdrop" aria-hidden="true"></div>
+	</div>
+	
+	<div id="updates">
+		<div class="modal">
+			<div class="modal-dialog" role="dialog" aria-hidden="true">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button aria-label="Close" onclick="closeModal(this.id)" class="close" type="button" id="updatesClose">
+							<clr-icon aria-hidden="true" shape="close"></clr-icon>
+						</button>
+						<h3 class="modal-title">Check for Updates</h3>
+					</div>
+					<div class="modal-body">
+						<p id="updatesText"></p>
+					</div>
+					<div class="modal-footer">
+						<a id="updatesLink" href="#"><button class="btn btn-primary updatesButton" type="button" onclick="closeModal(this.id)" id="updatesClose">Ok</button></a>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="modal-backdrop" aria-hidden="true"></div>
+	</div>
+	
+
+</body>
+
+</html>
