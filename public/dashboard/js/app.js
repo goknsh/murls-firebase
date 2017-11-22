@@ -17,7 +17,8 @@ firebase.auth().onAuthStateChanged(function(user) {
   	}
 	var user = firebase.auth().currentUser;
 	user.providerData.forEach(function (profile) {
-		document.getElementById('userEmail').innerText = profile.email
+		document.getElementById('userEmail').innerText = profile.email;
+		window.currentUserEmail = profile.email
 	});
   } else {
   	if (location.pathname === '/dashboard/') {
@@ -136,12 +137,18 @@ function editURL() {
 
 function deleteURL(urlData) {
 	closeModal('minimizedURLactions')
-	var shortURL = urlData.attributes.shorturl.value;
-	var urlInDB = firebase.database().ref("urls/" + shortURL);
-	urlInDB.remove().catch(function (error) {
-		openModal('error');
-		document.getElementById('errorText').innerText = error.message;
-	});
+	if (currentUserEmail === 'demo@murls.ga') {
+		openModal('error')
+		document.getElementById('errorText').innerText = "Since you are a demo user, you will be unable to delete URLs"
+	}
+	else {
+		var shortURL = urlData.attributes.shorturl.value;
+		var urlInDB = firebase.database().ref("urls/" + shortURL);
+		urlInDB.remove().catch(function (error) {
+			openModal('error');
+			document.getElementById('errorText').innerText = error.message;
+		});
+	}
 }
 
 function addURL() {
