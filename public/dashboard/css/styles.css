@@ -24,10 +24,6 @@ body {
 	cursor: pointer;
 }
 
-#loggedIn {
-	background: #fafafa;
-}
-
 #resetPassword, #editURL, #error, #notEnoughData, #updates, #editURL-error, .minimized, #minimizedURLactions {
 	display: none;
 }
@@ -38,8 +34,7 @@ body {
 
 .main-container {
 	height: auto;
-	min-height: 100vh;
-	background: none;
+	min-height: 100vh
 }
 
 #home-view .home-view-inner {
@@ -139,6 +134,9 @@ form .form-group {
 	height: 100vh;
 }
 
+.url-row:hover {
+	background-color: #eaeaea;
+}
 
 .col-xs-6, .col-xs-4, .col-xs-2, .add-url-container {
 	margin: 0;
@@ -159,6 +157,9 @@ form .form-group {
 }
 
 @media (max-width: 572px) {
+	#full-analytics .row {
+		display: block;
+	}
 	.url-actions .expanded {
 		display: none;
 	}

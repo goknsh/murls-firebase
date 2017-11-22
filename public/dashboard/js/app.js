@@ -48,6 +48,10 @@ function logIn() {
 
 var clipboard = new Clipboard('#linkcopy');
 
+function addUsers() {
+	window.location.href ="https://console.firebase.google.com/project/" + config.projectId+ "/authentication/users"
+}
+
 function logOut() {
 	firebase.auth().signOut();
 	authState();

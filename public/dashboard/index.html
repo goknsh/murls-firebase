@@ -31,7 +31,7 @@
 	<title>Dashboard | murls/firebase</title>
 </head>
 
-<body ng-controller="urlCtrl" id="loggedIn">
+<body ng-controller="urlCtrl">
 	<script src="https://www.gstatic.com/firebasejs/4.6.0/firebase.js"></script>
 	<script src="https://unpkg.com/@webcomponents/custom-elements/custom-elements.min.js"></script>
 	<script src="https://unpkg.com/clarity-icons/clarity-icons.min.js"></script>
@@ -64,7 +64,7 @@
 						<h4 class="dropdown-header">Account Actions</h4>
 						<button type="button" class="dropdown-item" onclick="resetPassword();">Reset Password</button>
 						<button type="button" class="dropdown-item" onclick="logOut();">Log Out</button>
-						<button type="button" class="dropdown-item">Add Users</button>
+						<button type="button" class="dropdown-item" onclick="addUsers();">Add Users</button>
 						<div class="dropdown-divider"></div>
 						<h4 class="dropdown-header">Miscellaneous</h4>
 						<a href="https://github.com/murls/firebase" class="dropdown-item">murls/firebase on GitHub</a>
