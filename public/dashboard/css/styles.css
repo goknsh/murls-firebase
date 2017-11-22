@@ -90,6 +90,10 @@ form .form-group {
 	margin-bottom: 1rem;
 }
 
+#l, #s {
+	display: none;
+}
+
 #inlineTableLoader {
 	display: static;
 }

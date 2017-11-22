@@ -50,8 +50,8 @@
 		<header class="header-4 ">
 			<div class="branding">
 				<a href="#" class="nav-link">
-					<clr-icon shape="murls-logo"></clr-icon>
-					<span class="title">murls/firebase</span>
+					<!--<clr-icon shape="murls-logo"></clr-icon>-->
+					<span class="title">COMPANY_NAME</span>
 				</a>
 			</div>
 			<div class="header-actions">
@@ -105,7 +105,7 @@
 								<span>Loading...</span>
 							</td>
 						</tr>
-	                    <tr class="url-row" ng-repeat="url in urls">
+	                    <tr class="url-row" id="{{url.$id}}" ng-repeat="url in urls">
 	                    	<td title="Short URL" class="left short-url-col">
 	                    		<a>{{url.$id}}</a>&nbsp;<br>
 	                    		<div class="linkcopyouter"><clr-icon title="Copy Short URL" id="linkcopy" shape="copy" data-clipboard-text="{{url.$id}}"></clr-icon></div>
