@@ -24,6 +24,10 @@ body {
 	cursor: pointer;
 }
 
+#loggedIn {
+	background: #fafafa;
+}
+
 #resetPassword, #editURL, #error, #notEnoughData, #updates, #editURL-error, .minimized, #minimizedURLactions {
 	display: none;
 }
@@ -34,7 +38,8 @@ body {
 
 .main-container {
 	height: auto;
-	min-height: 100vh
+	min-height: 100vh;
+	background: none;
 }
 
 #home-view .home-view-inner {
