@@ -78,7 +78,7 @@
 		
 		<div class="content-container">
 		    <div class="inner-container" id="home-view">
-		    	<div>
+		    	<div class="home-view-inner">
 				<form onsubmit="addURL();" data-intro="You can add Short URLs here">
 					<h1>Shorten your URL</h1>
 					<div class="row add-url-container">
@@ -107,13 +107,13 @@
 						</tr>
 	                    <tr class="url-row" ng-repeat="url in urls">
 	                    	<td title="Short URL" class="left short-url-col">
-	                    		<a ng-href="#{{url.$id}}">{{url.$id}}</a>&nbsp;<br>
-	                    		<clr-icon title="Copy Short URL" id="linkcopy" shape="copy" data-clipboard-text="{{url.$id}}"></clr-icon>
+	                    		<a>{{url.$id}}</a>&nbsp;<br>
+	                    		<div class="linkcopyouter"><clr-icon title="Copy Short URL" id="linkcopy" shape="copy" data-clipboard-text="{{url.$id}}"></clr-icon></div>
 	                    	</td>
 	                    	
 		                    <td title="Long URL" class="left long-url-col">
 		                    	<a ng-href="{{url.l}}" target="_blank">{{url.l}}</a>&nbsp;<br>
-		                    	<clr-icon title="Copy Long URL" id="linkcopy" shape="copy" data-clipboard-text="{{url.l}}"></clr-icon>
+		                    	<div class="linkcopyouter"><clr-icon title="Copy Long URL" id="linkcopy" shape="copy" data-clipboard-text="{{url.l}}"></clr-icon></div>
 		                    </td>
 		                    
 		                    <td title="Total Clicks Recorded" class="left all-clicks-col">{{url.th}}</td>
@@ -159,16 +159,6 @@
 						    <div class="col-xs">
 						        <div class="card">
 						            <div class="card-header">
-						                Short URL
-						            </div>
-						            <div class="card-block">
-						                <div class="card-text"><span id="chartsViewShortURL"></span></div>
-						            </div>
-						        </div>
-						    </div>
-						    <div class="col-xs">
-						        <div class="card">
-						            <div class="card-header">
 						                Total Hits
 						            </div>
 						            <div class="card-block">
@@ -193,6 +183,16 @@
 						            </div>
 						            <div class="card-block">
 						                <div class="card-text"><span id="chartsViewMobileHits"></span></div>
+						            </div>
+						        </div>
+						    </div>
+						    <div class="col-xs">
+						        <div class="card">
+						            <div class="card-header">
+						                Short URL
+						            </div>
+						            <div class="card-block">
+						                <div class="card-text"><span id="chartsViewShortURL"></span></div>
 						            </div>
 						        </div>
 						    </div>

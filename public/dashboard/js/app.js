@@ -215,6 +215,7 @@ function addURL() {
 
 function viewStats(urlData) {
 	closeModal('minimizedURLactions')
+	scrollTo(0,0)
 	document.getElementById('full-page-loader').style.display = 'flex'
 	var shortURL = urlData.attributes.shorturl.value;
 	var longURL = urlData.attributes.longurl.value;
@@ -236,6 +237,7 @@ function viewStats(urlData) {
 				var end = new Date(newend);
 				if (responses.p === undefined) {
 					openModal('notEnoughData')
+					document.getElementById('full-page-loader').style.display = 'none'
 					die();
 				}
 				else {
