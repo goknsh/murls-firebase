@@ -1,12 +1,4 @@
-var config = {
-    apiKey: "AIzaSyBRg_Ecb-F5jkGFof32ZrIRyG6YcxlKoj4",
-    authDomain: "murlsfire.firebaseapp.com",
-    databaseURL: "https://murlsfire.firebaseio.com",
-    projectId: "murlsfire",
-    storageBucket: "murlsfire.appspot.com",
-    messagingSenderId: "976393061586"
-  };
-firebase.initializeApp(config);
+// PASTE THE COPIED THINGS HERE
 
 window.projectid = config.projectId;
 
