@@ -1,5 +1,13 @@
-// PASTE THE COPIED THINGS HERE
+var config = {
+	apiKey: "AIzaSyBuXYDnfcmaS0ik3oHPK21aM8AyoCNDQro",
+	authDomain: "goknsh.firebaseapp.com",
+	databaseURL: "https://goknsh.firebaseio.com",
+	projectId: "goknsh",
+	storageBucket: "goknsh.appspot.com",
+	messagingSenderId: "145940042869"
+};
 
+firebase.initializeApp(config);
 window.projectid = config.projectId;
 
 window.error = "Unknown Shortened URL";
@@ -13,11 +21,11 @@ function stats() {
 	var askForStats = location.search;
 	if (askForStats.includes("stats=yes") === true) {
 		var xmlhttp = new XMLHttpRequest();
-		xmlhttp.onreadystatechange = function () {
+		xmlhttp.onreadystatechange = function() {
 			if (this.readyState == 4 && this.status == 200) {
-        var responses = JSON.parse(this.responseText);
-        if (responses.s === 2) {
-          currentURL = currentURL.replace(/\//g, "")
+				var responses = JSON.parse(this.responseText);
+				if (responses.s === 2) {
+					currentURL = currentURL.replace(/\//g, "")
 					document.getElementById("info").innerText = 'Stats for "' + currentURL + '"'
 					document.getElementById("hits").innerText = "Hits: " + responses.th
 					document.getElementById("desktop").innerText = "Desktop: " + responses.td
@@ -30,8 +38,8 @@ function stats() {
 				document.getElementById("info").innerText = error;
 			}
 		};
-			xmlhttp.open("GET", "https://" + projectid + ".firebaseio.com/urls" + currentURL + '.json', true);
-      xmlhttp.send();
+		xmlhttp.open("GET", "https://" + projectid + ".firebaseio.com/urls" + currentURL + '.json', true);
+		xmlhttp.send();
 	}
 	else {
 		get();
@@ -40,7 +48,7 @@ function stats() {
 
 function get() {
 	var xmlhttp = new XMLHttpRequest();
-	xmlhttp.onreadystatechange = function () {
+	xmlhttp.onreadystatechange = function() {
 		if (this.readyState == 4 && this.status == 200) {
 			var responses = JSON.parse(this.responseText);
 			if (responses.s === 2) {
@@ -64,11 +72,11 @@ function hits() {
 	var y = String(dt.getFullYear());
 	var x = d + "-" + m + "-" + y;
 	var th = firebase.database().ref('urls' + currentURL + '/th');
-	th.transaction(function (h) {
+	th.transaction(function(h) {
 		return (h || 0) + 1;
 	});
 	var h = firebase.database().ref('urls' + currentURL + '/h/' + x);
-	h.transaction(function (h) {
+	h.transaction(function(h) {
 		return (h || 0) + 1;
 	});
 	var le = firebase.database().ref().child('urls' + currentURL + '/le');
@@ -79,21 +87,21 @@ function hits() {
 	if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|BB|PlayBook|Pixel|IEMobile|Windows Phone|Kindle|Silk|Mobile|Firefox OS|Opera Mini/i
 		.test(navigator.userAgent)) {
 		var tm = firebase.database().ref('urls' + currentURL + '/tm');
-		tm.transaction(function (m) {
+		tm.transaction(function(m) {
 			return (m || 0) + 1;
 		});
 		var m = firebase.database().ref('urls' + currentURL + '/m/' + x);
-		m.transaction(function (m) {
+		m.transaction(function(m) {
 			return (m || 0) + 1;
 		});
-	} 
+	}
 	else {
 		var td = firebase.database().ref('urls' + currentURL + '/td');
-		td.transaction(function (d) {
+		td.transaction(function(d) {
 			return (d || 0) + 1;
 		});
 		var d = firebase.database().ref('urls' + currentURL + '/d/' + x);
-		d.transaction(function (d) {
+		d.transaction(function(d) {
 			return (d || 0) + 1;
 		});
 	}
@@ -101,58 +109,58 @@ function hits() {
 }
 
 function referrer() {
-  var ref = document.referrer;
+	var ref = document.referrer;
 	if (ref === "") {
 		var u = firebase.database().ref('urls' + currentURL + '/r/VW5rbm93bg==')
-		u.transaction(function (u) {
+		u.transaction(function(u) {
 			return (u || 0) + 1;
-        });
-    platform();
-	} 
+		});
+		platform();
+	}
 	else {
 		ref = ref.replace(/https:\/\//g, '')
 		ref = ref.replace(/http:\/\//g, '')
 		ref = ref.split('/')[0]
-    ref = window.btoa(ref);
-    var e = firebase.database().ref('urls' + currentURL + '/r/' + ref)
-    e.transaction(function (e) {
-      return (e || 0) + 1;
+		ref = window.btoa(ref);
+		var e = firebase.database().ref('urls' + currentURL + '/r/' + ref)
+		e.transaction(function(e) {
+			return (e || 0) + 1;
 		});
 		platform();
-  }
+	}
 }
 
 function platform() {
 	var plat = navigator.platform;
 	if (plat === "") {
 		var pu = firebase.database().ref('urls' + currentURL + '/p/u')
-		pu.transaction(function (pu) {
+		pu.transaction(function(pu) {
 			return (pu || 0) + 1;
 		})
-    ip();
-	} else {
+		ip();
+	}
+	else {
 		var p = firebase.database().ref('urls' + currentURL + '/p/' + plat)
-		p.transaction(function (p) {
+		p.transaction(function(p) {
 			return (p || 0) + 1;
 		})
-    ip();
-    }
+		ip();
+	}
 }
 
 function ip() {
 	var xmlhttp = new XMLHttpRequest();
-	xmlhttp.onreadystatechange = function () {
+	xmlhttp.onreadystatechange = function() {
 		if (this.readyState == 4 && this.status == 200) {
-			var ip = JSON.parse(this.responseText);
-			var ip = ip.country_code;
+			var ip = geoplugin_countryCode();
 			var i = firebase.database().ref('urls' + currentURL + '/c/' + ip)
-			i.transaction(function (i) {
+			i.transaction(function(i) {
 				return (i || 0) + 1;
 			})
 			rdr('go')
 		}
 	};
-	xmlhttp.open("GET", "https://freegeoip.net/json/", true);
+	xmlhttp.open("GET", "http://www.geoplugin.net/", true);
 	xmlhttp.send();
 }
 
