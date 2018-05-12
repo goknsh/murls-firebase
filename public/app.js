@@ -1,13 +1,5 @@
-var config = {
-	apiKey: "AIzaSyBuXYDnfcmaS0ik3oHPK21aM8AyoCNDQro",
-	authDomain: "goknsh.firebaseapp.com",
-	databaseURL: "https://goknsh.firebaseio.com",
-	projectId: "goknsh",
-	storageBucket: "goknsh.appspot.com",
-	messagingSenderId: "145940042869"
-};
+// PASTE COPIED THINGS HERE
 
-firebase.initializeApp(config);
 window.projectid = config.projectId;
 
 window.error = "Unknown Shortened URL";
